@@ -40,6 +40,7 @@ namespace ArchivalTibiaV71WorldServer
             PacketHandlers[Packets.Receive.StopAutoWalk] = new StopAutoWalkPacketHandler();
             PacketHandlers[Packets.Receive.AttackTarget] = new AttackTargetPacketHandler();
             PacketHandlers[Packets.Receive.CloseContainer] = new CloseContainerPacketHandler();
+            PacketHandlers[Packets.Receive.UseCrosshairThing] = new UseCrosshairThingPacketHandler();
         }
 
         public static void OnlinePlayersReceiveLoop()

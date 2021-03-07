@@ -235,12 +235,12 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         // }
 
 
-        public void CreatureMoved(Position oldPos, Position newPos, byte oldZIndex)
+        public void CreatureMoved(Position oldPos, Position newPos, byte newZIndex)
         {
             var builder = new PacketBuilder();
             builder.AddPacketId(Packets.Send.CreaturePositionUpdate);
             builder.AddPosition(oldPos);
-            builder.AddU8(oldZIndex);
+            builder.AddU8(newZIndex); // not 100% sure if it should be new or old z-index
             builder.AddPosition(newPos);
             builder.Send(_player);
         }

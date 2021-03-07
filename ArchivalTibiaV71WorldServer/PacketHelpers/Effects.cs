@@ -27,5 +27,13 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             builder.AddU8(2); // effect id - 1
             builder.Send(_player);
         }
+
+        public void Projectile(Position source, Position destination)
+        {
+            var builder = new PacketBuilder(Packets.Send.ProjectileEffect);
+            builder.AddPosition(source);
+            builder.AddPosition(destination);
+            builder.AddU8(3); // projectile id - 1
+        }
     }
 }

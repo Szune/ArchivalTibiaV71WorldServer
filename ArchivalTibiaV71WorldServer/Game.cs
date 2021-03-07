@@ -166,7 +166,7 @@ namespace ArchivalTibiaV71WorldServer
             }
         }
 
-        public void CreatureMoved(Player player, Position oldPos, Position newPos, byte oldZIndex)
+        public void CreatureMoved(Player player, Position oldPos, Position newPos, byte newZIndex)
         {
             var c = OnlinePlayers.Count;
             for (int i = 0; i < c; i++)
@@ -174,7 +174,7 @@ namespace ArchivalTibiaV71WorldServer
                 if (!OnlinePlayers[i].Connection.Connected) continue;
                 if (OnlinePlayers[i].Id == player.Id) continue;
                 if (!Position.SameScreen(OnlinePlayers[i].Position, player.Position)) continue;
-                OnlinePlayers[i].Packets.Map.CreatureMoved(oldPos, newPos, oldZIndex);
+                OnlinePlayers[i].Packets.Map.CreatureMoved(oldPos, newPos, newZIndex);
             }
         }
 

@@ -24,6 +24,7 @@
             WorldLight = 0x82,
             MagicEffect = 0x83,
             AnimatedText = 0x84,
+            ProjectileEffect = 0x85,
             UpdateCreatureHealthPercent = 0x8C,
             UpdateCreatureLight = 0x8D,
             UpdateCreatureOutfit = 0x8E,

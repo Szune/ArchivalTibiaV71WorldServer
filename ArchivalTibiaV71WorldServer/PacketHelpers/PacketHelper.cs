@@ -143,7 +143,8 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
             builder.Send(_player);
 
-            Game.Instance.CreatureMoved(_player, oldPos, newPos, oldZIndex);
+            var newZIndex = Game.Instance.GetCreatureZIndex(_player, _player.Position);
+            Game.Instance.CreatureMoved(_player, oldPos, newPos, newZIndex);
         }
 
         public void MoveNorth()
