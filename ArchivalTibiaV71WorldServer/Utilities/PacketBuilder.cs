@@ -22,13 +22,13 @@ namespace ArchivalTibiaV71WorldServer.Utilities
         {
         }
 
-        public PacketBuilder(Packets.Send id)
+        public PacketBuilder(Packets.SendToClient id)
         {
             AddPacketId(id);
         }
 
 
-        public void AddPacketId(Packets.Send packet) => AddU8((byte) packet);
+        public void AddPacketId(Packets.SendToClient packet) => AddU8((byte) packet);
         
         public void AddU8(byte value)
         {
@@ -159,8 +159,8 @@ namespace ArchivalTibiaV71WorldServer.Utilities
             var sent = connection.Send(_buffer, 0, _pos, SocketFlags.None);
 #if DEBUG
             Console.Write("[");
-            Console.Write(Enum.IsDefined(typeof(Packets.Send), _buffer[2])
-                ? ((Packets.Send) _buffer[2]).ToString()
+            Console.Write(Enum.IsDefined(typeof(Packets.SendToClient), _buffer[2])
+                ? ((Packets.SendToClient) _buffer[2]).ToString()
                 : $"0x{_buffer[2]:X2}");
             Console.WriteLine($"] Sent {_buffer.AsSpan(0, sent).ToHex()}");
 #endif
@@ -182,8 +182,8 @@ namespace ArchivalTibiaV71WorldServer.Utilities
                 var sent = player.Connection.Send(_buffer, 0, _pos, SocketFlags.None);
 #if DEBUG
                 Console.Write("[");
-                Console.Write(Enum.IsDefined(typeof(Packets.Send), _buffer[2])
-                    ? ((Packets.Send) _buffer[2]).ToString()
+                Console.Write(Enum.IsDefined(typeof(Packets.SendToClient), _buffer[2])
+                    ? ((Packets.SendToClient) _buffer[2]).ToString()
                     : $"0x{_buffer[2]:X2}");
                 Console.WriteLine($"] Sent to {player.Name}: {_buffer.AsSpan(0, sent).ToHex()}");
 #endif

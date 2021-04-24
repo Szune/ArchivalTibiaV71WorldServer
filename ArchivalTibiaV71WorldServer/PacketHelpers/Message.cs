@@ -14,7 +14,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         }
         public void Animated(Position pos, Colors color, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.AnimatedText);
+            var builder = new PacketBuilder(Packets.SendToClient.AnimatedText);
             builder.AddPosition(pos);
             builder.AddU8((byte)color);
             builder.AddString(message);
@@ -23,7 +23,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         }
         public void PlayerBroadcast(string fromName, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(fromName); // source player
             builder.AddU8((byte) MessageTypes.Broadcast); // message type
             builder.AddString(message);
@@ -32,7 +32,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         
         public void PlayerBroadcast2(string fromName, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(fromName); // source player
             builder.AddU8((byte) MessageTypes.Broadcast2); // message type
             builder.AddString(message);
@@ -41,7 +41,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Private(string fromName, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(fromName); // source player
             builder.AddU8((byte) MessageTypes.Private); // message type
             builder.AddString(message);
@@ -50,7 +50,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         
         public void LocalMessage(Position pos, string fromName, string message, byte speechType)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(fromName); // source player
             builder.AddU8(speechType); // message type
             builder.AddPosition(pos);
@@ -60,7 +60,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Say(Position pos, string fromName, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(fromName); // source player
             builder.AddU8((byte) MessageTypes.Say); // message type
             builder.AddPosition(pos);
@@ -70,7 +70,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Whisper(Position pos, string fromName, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(fromName); // source player
             builder.AddU8((byte) MessageTypes.Whisper); // message type
             builder.AddPosition(pos);
@@ -80,7 +80,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Yell(Position pos, string fromName, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(fromName); // source player
             builder.AddU8((byte) MessageTypes.Yell); // message type
             builder.AddPosition(pos);
@@ -90,7 +90,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Creature(Position pos, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(""); // source player
             builder.AddU8((byte) MessageTypes.Creature); // message type
             builder.AddPosition(pos);
@@ -100,7 +100,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         
         public void Creature2(Position pos, string message)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(""); // source player
             builder.AddU8((byte) MessageTypes.Creature2); // message type
             builder.AddPosition(pos);
@@ -113,7 +113,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         /// </summary>
         public void NotSure(string text, string something)
         {
-            var builder = new PacketBuilder(Packets.Send.Message);
+            var builder = new PacketBuilder(Packets.SendToClient.Message);
             builder.AddString(text); // source player
             builder.AddU8((byte) MessageTypes.NotSure); // message type
             builder.AddString(something); // source player
@@ -122,7 +122,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void StatusAndConsole(string message)
         {
-            var builder = new PacketBuilder(Packets.Send.SpecialMessage);
+            var builder = new PacketBuilder(Packets.SendToClient.SpecialMessage);
             builder.AddU8(0x11);
             builder.AddString(message);
             builder.Send(_player);
@@ -130,7 +130,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Status(string message)
         {
-            var builder = new PacketBuilder(Packets.Send.SpecialMessage);
+            var builder = new PacketBuilder(Packets.SendToClient.SpecialMessage);
             builder.AddU8(0x14);
             builder.AddString(message);
             builder.Send(_player);
@@ -138,7 +138,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void ServerBroadcast(string message)
         {
-            var builder = new PacketBuilder(Packets.Send.SpecialMessage);
+            var builder = new PacketBuilder(Packets.SendToClient.SpecialMessage);
             builder.AddU8(0xF);
             builder.AddString(message);
             builder.Send(_player);
@@ -146,7 +146,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         
         public void LookAt(string message)
         {
-            var builder = new PacketBuilder(Packets.Send.SpecialMessage);
+            var builder = new PacketBuilder(Packets.SendToClient.SpecialMessage);
             builder.AddU8(0x13);
             builder.AddString(message);
             builder.Send(_player);
@@ -154,7 +154,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         
         public void AdvanceOrRaid(string message)
         {
-            var builder = new PacketBuilder(Packets.Send.SpecialMessage);
+            var builder = new PacketBuilder(Packets.SendToClient.SpecialMessage);
             builder.AddU8(0x10);
             builder.AddString(message);
             builder.Send(_player);

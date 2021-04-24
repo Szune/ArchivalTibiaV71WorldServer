@@ -36,7 +36,7 @@ namespace ArchivalTibiaV71WorldServer
                     {
                         var reader = new PacketReader(buffer);
                         reader.ReadU16(); // skip length, lazy
-                        if ((Packets.Receive) reader.ReadU8() == Packets.Receive.CharacterLogin)
+                        if ((Packets.ReceiveFromClient) reader.ReadU8() == Packets.ReceiveFromClient.CharacterLogin)
                         {
                             if (!HandleCharacterLogin(connection, reader))
                             {

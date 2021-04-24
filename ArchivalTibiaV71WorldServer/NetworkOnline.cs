@@ -13,8 +13,8 @@ namespace ArchivalTibiaV71WorldServer
 {
     public static class NetworkOnline
     {
-        private static readonly Dictionary<Packets.Receive, IPacketHandler> PacketHandlers =
-            new Dictionary<Packets.Receive, IPacketHandler>();
+        private static readonly Dictionary<Packets.ReceiveFromClient, IPacketHandler> PacketHandlers =
+            new Dictionary<Packets.ReceiveFromClient, IPacketHandler>();
 
         public static readonly List<ServerScript> OnPacketReceive = new List<ServerScript>();
         public static readonly List<ServerScript> OnUnknownPacket = new List<ServerScript>();
@@ -23,24 +23,24 @@ namespace ArchivalTibiaV71WorldServer
 
         static NetworkOnline()
         {
-            PacketHandlers[Packets.Receive.Logout] = new LogoutPacketHandler();
-            PacketHandlers[Packets.Receive.MoveUp] = new MoveUpPacketHandler();
-            PacketHandlers[Packets.Receive.MoveRight] = new MoveRightPacketHandler();
-            PacketHandlers[Packets.Receive.MoveDown] = new MoveDownPacketHandler();
-            PacketHandlers[Packets.Receive.MoveLeft] = new MoveLeftPacketHandler();
-            PacketHandlers[Packets.Receive.LookAt] = new LookAtPacketHandler();
-            PacketHandlers[Packets.Receive.Message] = new MessagePacketHandler();
-            PacketHandlers[Packets.Receive.TurnUp] = new TurnUpPacketHandler();
-            PacketHandlers[Packets.Receive.TurnRight] = new TurnRightPacketHandler();
-            PacketHandlers[Packets.Receive.TurnDown] = new TurnDownPacketHandler();
-            PacketHandlers[Packets.Receive.TurnLeft] = new TurnLeftPacketHandler();
-            PacketHandlers[Packets.Receive.UseThing] = new UseThingPacketHandler();
-            PacketHandlers[Packets.Receive.AttackChaseMode] = new UseThingPacketHandler();
-            PacketHandlers[Packets.Receive.AutoWalkDirections] = new AutoWalkDirectionsPacketHandler();
-            PacketHandlers[Packets.Receive.StopAutoWalk] = new StopAutoWalkPacketHandler();
-            PacketHandlers[Packets.Receive.AttackTarget] = new AttackTargetPacketHandler();
-            PacketHandlers[Packets.Receive.CloseContainer] = new CloseContainerPacketHandler();
-            PacketHandlers[Packets.Receive.UseCrosshairThing] = new UseCrosshairThingPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.Logout] = new LogoutPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.MoveUp] = new MoveUpPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.MoveRight] = new MoveRightPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.MoveDown] = new MoveDownPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.MoveLeft] = new MoveLeftPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.LookAt] = new LookAtPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.Message] = new MessagePacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.TurnUp] = new TurnUpPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.TurnRight] = new TurnRightPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.TurnDown] = new TurnDownPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.TurnLeft] = new TurnLeftPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.UseThing] = new UseThingPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.AttackChaseMode] = new UseThingPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.AutoWalkDirections] = new AutoWalkDirectionsPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.StopAutoWalk] = new StopAutoWalkPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.AttackTarget] = new AttackTargetPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.CloseContainer] = new CloseContainerPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.UseCrosshairThing] = new UseCrosshairThingPacketHandler();
         }
 
         public static void OnlinePlayersReceiveLoop()
@@ -279,10 +279,10 @@ namespace ArchivalTibiaV71WorldServer
             var length = reader.ReadU16();
 
             // could probably use memory<T> or span<T> here for better performance
-            var packetId = (Packets.Receive) reader.ReadU8();
+            var packetId = (Packets.ReceiveFromClient) reader.ReadU8();
             #if DEBUG
             Console.Write("Packet Id: ");
-            Console.WriteLine(Enum.IsDefined(typeof(Packets.Receive), (byte) packetId)
+            Console.WriteLine(Enum.IsDefined(typeof(Packets.ReceiveFromClient), (byte) packetId)
                 ? packetId.ToString()
                 : $"0x{(byte) packetId:X2}");
             #endif

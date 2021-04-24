@@ -33,7 +33,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             _player.ZIndex = Game.Instance.GetCreatureZIndexLogin(_player, _player.Position);
             var builder = new PacketBuilder();
-            builder.AddPacketId(Packets.Send.LoginSuccess);
+            builder.AddPacketId(Packets.SendToClient.LoginSuccess);
             builder.AddU32(_player.Id);
             builder.AddU16(GameClient.Beat);
             Map.AddFullMapToBuilder(builder);
@@ -64,7 +64,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Skills()
         {
-            var builder = new PacketBuilder(Packets.Send.PlayerSkills);
+            var builder = new PacketBuilder(Packets.SendToClient.PlayerSkills);
             builder.AddU8(_player.Skills.Fist.Get());
             builder.AddU8(_player.Skills.Club.Get());
             builder.AddU8(_player.Skills.Sword.Get());
@@ -77,7 +77,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void StatusIcons()
         {
-            var builder = new PacketBuilder(Packets.Send.PlayerStatusIcons);
+            var builder = new PacketBuilder(Packets.SendToClient.PlayerStatusIcons);
             builder.AddU8((byte) Constants.StatusIcons.None);
             builder.Send(_player);
         }
@@ -85,7 +85,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void WorldLight()
         {
-            var builder = new PacketBuilder(Packets.Send.WorldLight);
+            var builder = new PacketBuilder(Packets.SendToClient.WorldLight);
             // 40 = night
             // 250 = day
             builder.AddU8(40);
@@ -95,7 +95,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Stats()
         {
-            var builder = new PacketBuilder(Packets.Send.PlayerStats);
+            var builder = new PacketBuilder(Packets.SendToClient.PlayerStats);
             builder.AddU16(_player.Hitpoints);
             builder.AddU16(_player.MaxHitpoints);
             builder.AddU16(_player.Capacity);
@@ -123,7 +123,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void MoveSouth()
         {
-            var builder = new PacketBuilder(Packets.Send.CreaturePositionUpdate);
+            var builder = new PacketBuilder(Packets.SendToClient.CreaturePositionUpdate);
             var oldPos = _player.Position;
             var oldZIndex = _player.ZIndex;
             builder.AddPosition(oldPos);
@@ -133,7 +133,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             builder.AddPosition(newPos);
             builder.Send(_player);
 
-            builder.AddPacketId(Packets.Send.MoveDown);
+            builder.AddPacketId(Packets.SendToClient.MoveDown);
             /* add rest of map description */
             _player.Packets.Map.AddMapDescriptionToBuilder(builder,
                 (ushort) (oldPos.X - 8),
@@ -149,7 +149,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void MoveNorth()
         {
-            var builder = new PacketBuilder(Packets.Send.CreaturePositionUpdate);
+            var builder = new PacketBuilder(Packets.SendToClient.CreaturePositionUpdate);
             var oldPos = _player.Position;
             var oldZIndex = _player.ZIndex;
             builder.AddPosition(oldPos);
@@ -157,7 +157,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             _player.MoveUp();
             var newPos = _player.Position;
             builder.AddPosition(newPos);
-            builder.AddPacketId(Packets.Send.MoveUp);
+            builder.AddPacketId(Packets.SendToClient.MoveUp);
             /* add rest of map description */
             _player.Packets.Map.AddMapDescriptionToBuilder(builder, (ushort) (oldPos.X - 8), (ushort) (newPos.Y - 6),
                 newPos.Z, GameClient.Width, 1, true);
@@ -168,7 +168,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void MoveWest()
         {
-            var builder = new PacketBuilder(Packets.Send.CreaturePositionUpdate);
+            var builder = new PacketBuilder(Packets.SendToClient.CreaturePositionUpdate);
             var oldPos = _player.Position;
             var oldZIndex = _player.ZIndex;
             builder.AddPosition(oldPos);
@@ -176,7 +176,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             _player.MoveLeft();
             var newPos = _player.Position;
             builder.AddPosition(newPos);
-            builder.AddPacketId(Packets.Send.MoveLeft);
+            builder.AddPacketId(Packets.SendToClient.MoveLeft);
             /* add rest of map description */
             _player.Packets.Map.AddMapDescriptionToBuilder(builder,
                 (ushort) (newPos.X - 8),
@@ -189,7 +189,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void MoveEast()
         {
-            var builder = new PacketBuilder(Packets.Send.CreaturePositionUpdate);
+            var builder = new PacketBuilder(Packets.SendToClient.CreaturePositionUpdate);
             var oldPos = _player.Position;
             var oldZIndex = _player.ZIndex;
             builder.AddPosition(oldPos);
@@ -197,7 +197,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             _player.MoveRight();
             var newPos = _player.Position;
             builder.AddPosition(newPos);
-            builder.AddPacketId(Packets.Send.MoveRight);
+            builder.AddPacketId(Packets.SendToClient.MoveRight);
             /* add rest of map description */
             _player.Packets.Map.AddMapDescriptionToBuilder(builder, 
                 (ushort) (newPos.X + 9),
@@ -210,13 +210,13 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void ResetAutoWalk()
         {
-            var builder = new PacketBuilder(Packets.Send.ResetAutoWalk);
+            var builder = new PacketBuilder(Packets.SendToClient.ResetAutoWalk);
             builder.Send(_player);
         }
 
         public void StopAttack()
         {
-            var builder = new PacketBuilder(Packets.Send.StopAttack);
+            var builder = new PacketBuilder(Packets.SendToClient.StopAttack);
             builder.Send(_player);
         }
     }

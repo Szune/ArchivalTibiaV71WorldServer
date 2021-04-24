@@ -56,56 +56,56 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
                 case EquipmentSlots.Armor:
                 case EquipmentSlots.Legs:
                 case EquipmentSlots.Feet:
-                    LookAt(player, $"{strucc.Name} (Arm:{strucc.Armor})", strucc.Weight, strucc.Description);
+                    LookAt(player, strucc.Id, $"{strucc.Name} (Arm:{strucc.Armor})", strucc.Weight, strucc.Description);
                     break;
                 case EquipmentSlots.Necklace:
                     if (strucc.Armor > 0)
                     {
-                        LookAt(player, $"{strucc.Name} (Arm:{strucc.Armor})", strucc.Weight, strucc.Description);
+                        LookAt(player, strucc.Id, $"{strucc.Name} (Arm:{strucc.Armor})", strucc.Weight, strucc.Description);
                     }
                     else
                     {
-                        LookAt(player, $"{strucc.Name}", strucc.Weight, strucc.Description);
+                        LookAt(player, strucc.Id, $"{strucc.Name}", strucc.Weight, strucc.Description);
                     }
 
                     break;
                 case EquipmentSlots.Backpack:
-                    LookAt(player, $"{strucc.Name} (Vol:{strucc.ContainerSize})", strucc.Weight, strucc.Description);
+                    LookAt(player, strucc.Id, $"{strucc.Name} (Vol:{strucc.ContainerSize})", strucc.Weight, strucc.Description);
                     break;
                 case EquipmentSlots.Ring:
-                    LookAt(player, $"{strucc.Name}", strucc.Weight, strucc.Description);
+                    LookAt(player, strucc.Id, $"{strucc.Name}", strucc.Weight, strucc.Description);
                     break;
                 case EquipmentSlots.Ammunition:
-                    LookAt(player, $"{strucc.Name}", strucc.Weight, strucc.Description);
+                    LookAt(player, strucc.Id, $"{strucc.Name}", strucc.Weight, strucc.Description);
                     break;
                 case EquipmentSlots.Weapon:
-                    LookAt(player, $"{strucc.Name} (Atk:{strucc.Attack}, Def:{strucc.Defense})", strucc.Weight, strucc.Description);
+                    LookAt(player, strucc.Id, $"{strucc.Name} (Atk:{strucc.Attack}, Def:{strucc.Defense})", strucc.Weight, strucc.Description);
                     break;
                 case EquipmentSlots.Shield:
-                    LookAt(player, $"{strucc.Name} (Def:{strucc.Defense})", strucc.Weight, strucc.Description);
+                    LookAt(player, strucc.Id, $"{strucc.Name} (Def:{strucc.Defense})", strucc.Weight, strucc.Description);
                     break;
                 case EquipmentSlots.None:
                     if (string.IsNullOrWhiteSpace(strucc.Name))
-                        LookAt(player, $"an item of id {strucc.Id}", 0);
+                        LookAt(player, strucc.Id, $"an item of id {strucc.Id}", 0);
                     else
-                        LookAt(player, $"{strucc.Name}", strucc.Weight, strucc.Description);
+                        LookAt(player, strucc.Id, $"{strucc.Name}", strucc.Weight, strucc.Description);
                     break;
                 default:
-                    LookAt(player, $"an item of id {strucc.Id}", 0);
+                    LookAt(player, strucc.Id, $"an item of id {strucc.Id}", 0);
                     break;
             }
         }
 
-        public void LookAt(Player player, string message, ushort weight, string description=default)
+        public void LookAt(Player player, int id, string message, ushort weight, string description=default)
         {
             var desc = string.IsNullOrWhiteSpace(description) ? "" : "\n" + description;
             if (weight > 0)
             {
-                player.Packets.Message.LookAt($"You see {message}.\nIt weighs {weight / 100}.{weight % 100:00} oz.{desc}");
+                player.Packets.Message.LookAt($"You see {message} [{id}].\nIt weighs {weight / 100}.{weight % 100:00} oz.{desc}");
             }
             else
             {
-                player.Packets.Message.LookAt($"You see {message}.{desc}");
+                player.Packets.Message.LookAt($"You see {message} [{id}].{desc}");
             }
         }
     }

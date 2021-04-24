@@ -2,7 +2,7 @@
 {
     public static class Packets
     {
-        public enum Send : byte
+        public enum SendToClient : byte
         {
             LoginSuccess = 0xA,
             SorryMessageBox = 0x14,
@@ -36,8 +36,9 @@
             Message = 0xAA,
             SpecialMessage = 0xB4,
             ResetAutoWalk = 0xB5,
+            NoIdea = 0xC8,
         }
-        public enum Receive : byte
+        public enum ReceiveFromClient : byte
         {
             AccountLogin = 0x01,
             CharacterLogin = 0x0A,

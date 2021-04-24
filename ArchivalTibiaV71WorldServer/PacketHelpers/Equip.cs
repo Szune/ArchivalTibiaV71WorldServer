@@ -16,7 +16,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Head);
             builder.AddItem(item);
             builder.Send(_player);
@@ -27,7 +27,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Necklace);
             builder.AddItem(item);
             builder.Send(_player);
@@ -38,7 +38,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Backpack);
             builder.AddItem(item);
             builder.Send(_player);
@@ -49,7 +49,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Armor);
             builder.AddItem(item);
             builder.Send(_player);
@@ -60,7 +60,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Right);
             builder.AddItem(item);
             builder.Send(_player);
@@ -71,7 +71,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Left);
             builder.AddItem(item);
             builder.Send(_player);
@@ -82,7 +82,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Legs);
             builder.AddItem(item);
             builder.Send(_player);
@@ -94,7 +94,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Feet);
             builder.AddItem(item);
             builder.Send(_player);
@@ -105,7 +105,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Ring);
             builder.AddItem(item);
             builder.Send(_player);
@@ -116,7 +116,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         {
             if (item.Id == 0)
                 return;
-            var builder = new PacketBuilder(Packets.Send.FillEquipmentSlot);
+            var builder = new PacketBuilder(Packets.SendToClient.FillEquipmentSlot);
             builder.AddU8((byte) EquipmentSlots.Ammunition);
             builder.AddItem(item);
             builder.Send(_player);

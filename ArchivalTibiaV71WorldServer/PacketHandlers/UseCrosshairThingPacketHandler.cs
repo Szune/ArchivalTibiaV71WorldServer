@@ -1,4 +1,5 @@
 ﻿using System;
+using ArchivalTibiaV71WorldServer.Constants;
 using ArchivalTibiaV71WorldServer.Entities;
 using ArchivalTibiaV71WorldServer.Utilities;
 
@@ -13,12 +14,12 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             sourcePos = fromPlayer ? player.Position : sourcePos;
             
             var itemId = reader.ReadU16();
-            var sourceZIndex = reader.ReadU8(); // not sure if actually zindex
+            //var sourceZIndex = reader.ReadU8(); // not sure if actually zindex
+            var containerSlot = reader.ReadU8(); // depends on source type (ground, backpack etc)
 
             var destPos = reader.ReadPosition(); // screen pos
             var destinationItemOnTopOrPlayer = reader.ReadU16(); // itemID on top or 99 if player
-            var destZIndex = reader.ReadU8();
-            destPos += sourcePos;
+            var containerSlotAgain = reader.ReadU8(); // depends on source type (ground, backpack etc)
             
             var c = Game.Instance.OnlinePlayers.Count;
             for(int i = 0; i < c; i++)

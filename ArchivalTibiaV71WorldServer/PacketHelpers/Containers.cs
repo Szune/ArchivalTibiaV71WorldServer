@@ -16,14 +16,14 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void Close(byte index)
         {
-            var builder = new PacketBuilder(Packets.Send.CloseContainer);
+            var builder = new PacketBuilder(Packets.SendToClient.CloseContainer);
             builder.AddU8(index);
             builder.Send(_player);
         }
 
         public void Open(byte newContainerIndex, Item container, ItemStructure strucc, bool childContainer = true)
         {
-            var builder = new PacketBuilder(Packets.Send.OpenContainer);
+            var builder = new PacketBuilder(Packets.SendToClient.OpenContainer);
             builder.AddU8(newContainerIndex); // container index
             builder.AddU16(container.Id); // container look id? the one identifying the container
             builder.AddString(strucc.Name);

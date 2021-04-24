@@ -17,7 +17,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         public void ItemAppear(Position pos, Item item)
         {
             var builder = new PacketBuilder();
-            builder.AddPacketId(Packets.Send.ItemOrCreatureAppearOnTile);
+            builder.AddPacketId(Packets.SendToClient.ItemOrCreatureAppearOnTile);
             builder.AddPosition(pos);
             builder.AddItem(item);
             builder.Send(_player);
@@ -26,7 +26,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         public void CreatureTurn(Creature creature)
         {
             var builder = new PacketBuilder();
-            builder.AddPacketId(Packets.Send.CreatureTurn);
+            builder.AddPacketId(Packets.SendToClient.CreatureTurn);
             builder.AddPosition(creature.Position);
             builder.AddU8(creature.ZIndex);
             builder.AddU16(0x63);
@@ -38,7 +38,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         public void CreatureDisappear(Creature creature)
         {
             var builder = new PacketBuilder();
-            builder.AddPacketId(Packets.Send.ItemOrCreatureDisappear);
+            builder.AddPacketId(Packets.SendToClient.ItemOrCreatureDisappear);
             builder.AddPosition(creature.Position);
             builder.AddU8(creature.ZIndex);
             builder.Send(_player);
@@ -47,7 +47,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         public void CreatureAppear(Creature creature)
         {
             var builder = new PacketBuilder();
-            builder.AddPacketId(Packets.Send.ItemOrCreatureAppearOnTile);
+            builder.AddPacketId(Packets.SendToClient.ItemOrCreatureAppearOnTile);
             builder.AddPosition(creature.Position);
             builder.AddCreature(_player, creature);
             builder.Send(_player);
@@ -55,7 +55,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void AddFullMapToBuilder(PacketBuilder builder)
         {
-            builder.AddPacketId(Packets.Send.FullScreenMap);
+            builder.AddPacketId(Packets.SendToClient.FullScreenMap);
             /* add player position */
             builder.AddPosition(_player.Position);
             /* add rest of map description */
@@ -238,7 +238,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         public void CreatureMoved(Position oldPos, Position newPos, byte newZIndex)
         {
             var builder = new PacketBuilder();
-            builder.AddPacketId(Packets.Send.CreaturePositionUpdate);
+            builder.AddPacketId(Packets.SendToClient.CreaturePositionUpdate);
             builder.AddPosition(oldPos);
             builder.AddU8(newZIndex); // not 100% sure if it should be new or old z-index
             builder.AddPosition(newPos);

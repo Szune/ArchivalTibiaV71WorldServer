@@ -14,7 +14,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         }
         public void UpdateLight(Creature creature)
         {
-            var builder = new PacketBuilder(Packets.Send.UpdateCreatureLight);
+            var builder = new PacketBuilder(Packets.SendToClient.UpdateCreatureLight);
             builder.AddU32(creature.Id);
             builder.AddU8(creature.LightColor);
             builder.AddU8(creature.LightLevel);
@@ -23,7 +23,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void UpdateOutfit(Creature creature)
         {
-            var builder = new PacketBuilder(Packets.Send.UpdateCreatureOutfit);
+            var builder = new PacketBuilder(Packets.SendToClient.UpdateCreatureOutfit);
             builder.AddU32(creature.Id);
             builder.AddU8(creature.Outfit.Id);
             if (creature.Outfit.Id != 0)
@@ -43,7 +43,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         
         public void UpdateHealth(Creature creature)
         {
-            var builder = new PacketBuilder(Packets.Send.UpdateCreatureHealthPercent);
+            var builder = new PacketBuilder(Packets.SendToClient.UpdateCreatureHealthPercent);
             builder.AddU32(creature.Id);
             builder.AddU8(creature.PercentHitpoints);
             builder.Send(_player);
@@ -51,7 +51,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
         
         public void UpdateSpeed(Creature creature)
         {
-            var builder = new PacketBuilder(Packets.Send.UpdateCreatureSpeed);
+            var builder = new PacketBuilder(Packets.SendToClient.UpdateCreatureSpeed);
             builder.AddU32(creature.Id);
             builder.AddU16(creature.GetSpeed());
             builder.Send(_player);

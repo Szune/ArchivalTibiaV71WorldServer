@@ -10,7 +10,7 @@ namespace ArchivalTibiaV71WorldServer.Extensions
         public static void SendSorryMessageBox(this Socket connection, string message)
         {
             var builder = new PacketBuilder();
-            builder.AddPacketId(Packets.Send.SorryMessageBox);
+            builder.AddPacketId(Packets.SendToClient.SorryMessageBox);
             builder.AddString(message);
             builder.Send(connection);
         }

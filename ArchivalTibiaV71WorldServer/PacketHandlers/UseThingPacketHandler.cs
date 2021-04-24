@@ -66,7 +66,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
 
         private static void NewMethod1(Player player, Item item, ItemStructure strucc)
         {
-            var builder = new PacketBuilder(Packets.Send.OpenContainer);
+            var builder = new PacketBuilder(Packets.SendToClient.OpenContainer);
             builder.AddU8(0); // container index
             builder.AddU16(item.Id); // container look id? the one identifying the container
             builder.AddString(strucc.Name);
@@ -93,7 +93,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
 
         private static void OpenContainer(Player player, byte newContainerIndex, Item container, ItemStructure strucc, bool childContainer = true)
         {
-            var builder = new PacketBuilder(Packets.Send.OpenContainer);
+            var builder = new PacketBuilder(Packets.SendToClient.OpenContainer);
             builder.AddU8(newContainerIndex); // container index
             builder.AddU16(container.Id); // container look id? the one identifying the container
             builder.AddString(strucc.Name);
