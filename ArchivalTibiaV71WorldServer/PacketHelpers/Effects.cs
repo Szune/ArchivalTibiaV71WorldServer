@@ -28,15 +28,22 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             builder.Send(_player);
         }
 
-        public void Projectile(Position source, Position destination)
+        public void Projectile(Position source, Position destination, byte projectileId)
         {
             var builder = new PacketBuilder(Packets.SendToClient.ProjectileEffect);
             builder.AddPosition(source);
             builder.AddPosition(destination);
-            builder.AddU8(3); // projectile id - 1 because the client adds 1 to whatever we send
+            builder.AddU8((byte)(projectileId - 1)); // projectile id - 1 because the client adds 1 to whatever we send
             builder.Send(_player);
             // 3 (4) == HMM projectile id
-            // TODO: get correct projectile id
+        }
+
+        public void Magic(Position destination, byte projectileId)
+        {
+            var builder = new PacketBuilder(Packets.SendToClient.MagicEffect);
+            builder.AddPosition(destination);
+            builder.AddU8((byte)(projectileId - 1)); // projectile id - 1 because the client adds 1 to whatever we send
+            builder.Send(_player);
         }
     }
 }

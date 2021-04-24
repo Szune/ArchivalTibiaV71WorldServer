@@ -68,5 +68,25 @@ namespace ArchivalTibiaV71WorldServer.World
             var item = new Item(id, extra) { Flags = flags };
             return item;
         }
+        
+        public byte GetMagicId(ushort item)
+        {
+            return item switch
+            {
+                1618 => 18, // sudden death
+                1661 => 12, // heavy magic missile rune
+                _ => throw new ArgumentOutOfRangeException(nameof(item)), // note: bad idea to crash on malicious ids
+            };
+        }
+
+        public byte GetProjectileId(ushort item)
+        {
+            return item switch
+            {
+                1618 => 11, // sudden death
+                1661 => 4, // heavy magic missile rune
+                _ => throw new ArgumentOutOfRangeException(nameof(item)), // note: bad idea to crash on malicious ids
+            };
+        }
     }
 }
