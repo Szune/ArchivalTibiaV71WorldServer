@@ -16,7 +16,9 @@ namespace ArchivalTibiaV71WorldServer
         {
             IoC.InitializeForLive();
             
-            new Thread(() => { _ = CSharpScript.Create("return null;").RunAsync().Result; }).Start();
+            var csharpScriptWarmup = new Thread(() => { _ = CSharpScript.Create("return null;").RunAsync().Result; });
+            csharpScriptWarmup.Start();
+            
             Console.Title = "ArchivalTibiaV71WorldServer";
             Console.WriteLine(".-----------------------------------.");
             Console.WriteLine("| Archival Tibia 7.1 World Server: Online |");
@@ -40,6 +42,7 @@ namespace ArchivalTibiaV71WorldServer
             }
 
             Console.WriteLine("- Loading scripts...");
+            csharpScriptWarmup.Join(); // let warmup finish before running the loading script
             ServerScript.LoadScript.Execute(new ScriptGlobals());
 
             NetworkOnline.InitializeOnlinePlayersReceiveLoopThread();
