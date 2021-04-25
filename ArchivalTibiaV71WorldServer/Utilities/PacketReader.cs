@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Text;
+using ArchivalTibiaV71WorldServer.Constants;
 using ArchivalTibiaV71WorldServer.Extensions;
 
 namespace ArchivalTibiaV71WorldServer.Utilities
@@ -31,7 +32,7 @@ namespace ArchivalTibiaV71WorldServer.Utilities
 
         public Position ReadPosition()
         {
-            return new Position(ReadU16(), ReadU16(), ReadU8());
+            return new(ReadU16(), ReadU16(), ReadU8());
         }
 
         public uint ReadU32()
@@ -49,6 +50,11 @@ namespace ArchivalTibiaV71WorldServer.Utilities
             byte value = _bytes[_pos];
             _pos += 1;
             return value;
+        }
+
+        public Packets.ReceiveFromClient ReadPacketId()
+        {
+            return (Packets.ReceiveFromClient) ReadU8();
         }
 
         private string ReadPackedAsciiString(int length)

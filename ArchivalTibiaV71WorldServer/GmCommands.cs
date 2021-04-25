@@ -8,13 +8,13 @@ namespace ArchivalTibiaV71WorldServer
 {
     public static class GmCommands
     {
-        private static readonly string[] EmptyArgs = new string[0];
-        public const string CommandBroadcast = "!bc";
-        public const string CommandSpawnItem = "!spawnitem";
-        public const string CommandSpawnMonster = "!spawnmob";
-        public const string CommandReloadScripts = "!reload";
-        public const string CommandSetSpeed = "!speed";
-        public const string CommandSetOutfit = "!outfit";
+        private static readonly string[] EmptyArgs = Array.Empty<string>();
+        private const string CommandBroadcast = "!bc";
+        private const string CommandSpawnItem = "!spawnitem";
+        private const string CommandSpawnMonster = "!spawnmob";
+        private const string CommandReloadScripts = "!reload";
+        private const string CommandSetSpeed = "!speed";
+        private const string CommandSetOutfit = "!outfit";
 
         public static bool Parse(Player player, string message)
         {

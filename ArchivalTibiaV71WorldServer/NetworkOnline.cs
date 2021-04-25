@@ -13,13 +13,12 @@ namespace ArchivalTibiaV71WorldServer
 {
     public static class NetworkOnline
     {
-        private static readonly Dictionary<Packets.ReceiveFromClient, IPacketHandler> PacketHandlers =
-            new Dictionary<Packets.ReceiveFromClient, IPacketHandler>();
+        private static readonly Dictionary<Packets.ReceiveFromClient, IPacketHandler> PacketHandlers = new();
 
-        public static readonly List<ServerScript> OnPacketReceive = new List<ServerScript>();
-        public static readonly List<ServerScript> OnUnknownPacket = new List<ServerScript>();
+        public static readonly List<ServerScript> OnPacketReceive = new();
+        public static readonly List<ServerScript> OnUnknownPacket = new();
 
-        public static ManualResetEvent LoginWait = new ManualResetEvent(false);
+        public static ManualResetEvent LoginWait = new(false);
 
         static NetworkOnline()
         {
@@ -101,7 +100,7 @@ namespace ArchivalTibiaV71WorldServer
                     if (!p.CanAttack)
                         return;
                     var c = IoC.Game.GetCreatureById(p.TargetId);
-                    if(!IoC.Game.AreAdjacent(p, c))
+                    if (!IoC.Game.AreAdjacent(p, c))
                         return;
                     p.Attack(c);
                     break;
@@ -158,6 +157,7 @@ namespace ArchivalTibiaV71WorldServer
 
             var newOnline = IoC.Game.NewOnlinePlayers.Count;
 
+            // TODO: rewrite this huge method to be readable
             // add new online players
             if (newOnline > 0)
             {
@@ -280,12 +280,12 @@ namespace ArchivalTibiaV71WorldServer
 
             // could probably use memory<T> or span<T> here for better performance
             var packetId = (Packets.ReceiveFromClient) reader.ReadU8();
-            #if DEBUG
+#if DEBUG
             Console.Write("Packet Id: ");
             Console.WriteLine(Enum.IsDefined(typeof(Packets.ReceiveFromClient), (byte) packetId)
                 ? packetId.ToString()
                 : $"0x{(byte) packetId:X2}");
-            #endif
+#endif
             if (PacketHandlers.TryGetValue(packetId, out var handler))
             {
                 handler.Handle(player, reader);

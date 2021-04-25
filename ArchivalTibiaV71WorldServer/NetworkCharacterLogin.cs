@@ -13,7 +13,7 @@ namespace ArchivalTibiaV71WorldServer
     {
         private static void WorldServerSocketAccept()
         {
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             var endpoint = new IPEndPoint(IPAddress.Any, 7172);
             socket.Bind(endpoint);
             socket.Listen(0);
@@ -32,23 +32,17 @@ namespace ArchivalTibiaV71WorldServer
 
                     var buffer = new byte[1024 * 1];
                     int received = connection.Receive(buffer);
-                    if (received > 0)
+                    if (received <= 0) continue;
+                    var reader = new PacketReader(buffer);
+                    reader.ReadU16(); // skip length, lazy
+                    if (reader.ReadPacketId() == Packets.ReceiveFromClient.CharacterLogin)
                     {
-                        var reader = new PacketReader(buffer);
-                        reader.ReadU16(); // skip length, lazy
-                        if ((Packets.ReceiveFromClient) reader.ReadU8() == Packets.ReceiveFromClient.CharacterLogin)
-                        {
-                            if (!HandleCharacterLogin(connection, reader))
-                            {
-                                connection.Close();
-                                Console.WriteLine(" -- Login failed");
-                            }
-                        }
-                        else
-                        {
-                            connection.Close();
-                            Console.WriteLine(" -- Login failed: bad packet id");
-                        }
+                        HandleCharacterLogin(connection, reader);
+                    }
+                    else
+                    {
+                        connection.Close();
+                        Console.WriteLine(" -- Login failed: bad packet id");
                     }
                 }
                 catch
@@ -56,11 +50,22 @@ namespace ArchivalTibiaV71WorldServer
                     // accept new socket
                 }
             }
+            
             // I want people to be able to login
             // ReSharper disable once FunctionNeverReturns
         }
 
-        private static bool HandleCharacterLogin(Socket connection, PacketReader reader)
+        private static void HandleCharacterLogin(Socket connection, PacketReader reader)
+        {
+            if (TryHandleCharacterLogin(connection, reader))
+            {
+                return; // success!
+            }
+            connection.Close();
+            Console.WriteLine(" -- Login failed");
+        }
+        
+        private static bool TryHandleCharacterLogin(Socket connection, PacketReader reader)
         {
             // character login packet
             Console.WriteLine("[Received character login packet]");
