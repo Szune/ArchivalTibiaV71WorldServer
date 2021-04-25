@@ -22,11 +22,13 @@ namespace ArchivalTibiaV71WorldServer.Scripting
             try
             {
                 var code = File.ReadAllText(_name);
-                _compiled = CSharpScript.Create(code, 
+                _compiled = CSharpScript.Create(code,
                     ScriptOptions
                         .Default
                         .AddReferences("ArchivalTibiaV71WorldServer", "ArchivalTibiaV71WorldServer.Constants")
-                        .AddImports("System", "ArchivalTibiaV71WorldServer", "ArchivalTibiaV71WorldServer.Constants", "ArchivalTibiaV71WorldServer.Scripting", "System.Linq", "System.Text"),
+                        .AddImports("System", "ArchivalTibiaV71WorldServer", "ArchivalTibiaV71WorldServer.Constants",
+                            "ArchivalTibiaV71WorldServer.Utilities", "ArchivalTibiaV71WorldServer.Scripting",
+                            "System.Linq", "System.Text"),
                     typeof(ScriptGlobals));
                 Console.WriteLine($" > Loaded script {_name}");
             }
@@ -49,11 +51,10 @@ namespace ArchivalTibiaV71WorldServer.Scripting
             {
                 _compiled.RunAsync(scriptGlobals);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Exception when running script {_name}:\n{ex}");
             }
         }
-        
     }
 }

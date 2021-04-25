@@ -14,6 +14,8 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             var itemId = reader.ReadU16();
             var topItem = reader.ReadU8();
 
+            var tile = Game.Instance.GetCreaturesOnTile(pos);
+
             if (pos.X == 0xFFFF)
             {
                 //Console.WriteLine($"Looked at item {itemId} (top item: {topItem}) in slot {(EquipmentSlots)pos.Y}");
@@ -35,6 +37,11 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             else if (Position.Equals(pos, player.Position))
             {
                 player.Packets.Message.LookAt($"You are looking at yourself.");
+            }
+            else if (tile != null)
+            {
+                var creature = tile[^1];
+                player.Packets.Message.LookAt($"You are looking at {creature.Name} [{creature.Id}].");
             }
             else
             {
