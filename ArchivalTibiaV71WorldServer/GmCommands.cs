@@ -38,7 +38,7 @@ namespace ArchivalTibiaV71WorldServer
                     return true;
                 case CommandBroadcast:
                     msg = GetArgument(CommandBroadcast, message);
-                    Game.Instance.BroadcastFrom(player, msg);
+                    IoC.Game.BroadcastFrom(player, msg);
                     return true;
                 case CommandSetOutfit:
                     SetOutfit(player, message);
@@ -57,7 +57,7 @@ namespace ArchivalTibiaV71WorldServer
                     return true;
                 case CommandSpawnMonster:
                     msg = GetArgument(CommandSpawnMonster, message);
-                    Game.Instance.GmSpawnMonster(player, msg);
+                    IoC.Game.GmSpawnMonster(player, msg);
                     return true;
                 case "!ll":
                     msg = message.Substring("!ll ".Length);
@@ -149,7 +149,7 @@ namespace ArchivalTibiaV71WorldServer
                 {
                     if (ushort.TryParse(args[0], out var id))
                     {
-                        Game.Instance.GmSpawnItem(player.Position, id);
+                        IoC.Game.GmSpawnItem(player.Position, id);
                     }
                     else
                     {
@@ -165,7 +165,7 @@ namespace ArchivalTibiaV71WorldServer
                     {
                         if (byte.TryParse(args[1], out var count))
                         {
-                            Game.Instance.GmSpawnItemWithCount(player.Position, id, count);
+                            IoC.Game.GmSpawnItemWithCount(player.Position, id, count);
                         }
                         else
                         {

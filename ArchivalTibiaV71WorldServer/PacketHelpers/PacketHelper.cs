@@ -31,7 +31,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         public void LoginSuccess()
         {
-            _player.ZIndex = Game.Instance.GetCreatureZIndexLogin(_player, _player.Position);
+            _player.ZIndex = IoC.Game.GetCreatureZIndexLogin(_player, _player.Position);
             var builder = new PacketBuilder();
             builder.AddPacketId(Packets.SendToClient.LoginSuccess);
             builder.AddU32(_player.Id);
@@ -51,14 +51,14 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
         private void PlayerAppear()
         {
-            var c = Game.Instance.OnlinePlayers.Count;
+            var c = IoC.Game.OnlinePlayers.Count;
             for (int i = 0; i < c; i++)
             {
-                if (Game.Instance.OnlinePlayers[i].Id == _player.Id) continue;
-                if (!Game.Instance.OnlinePlayers[i].Connection.Connected) continue;
-                if (!Position.SameScreen(_player.Position, Game.Instance.OnlinePlayers[i].Position)) continue;
-                Game.Instance.OnlinePlayers[i].Packets.Map.CreatureAppear(_player);
-                Game.Instance.OnlinePlayers[i].Packets.Effects.Login(_player);
+                if (IoC.Game.OnlinePlayers[i].Id == _player.Id) continue;
+                if (!IoC.Game.OnlinePlayers[i].Connection.Connected) continue;
+                if (!Position.SameScreen(_player.Position, IoC.Game.OnlinePlayers[i].Position)) continue;
+                IoC.Game.OnlinePlayers[i].Packets.Map.CreatureAppear(_player);
+                IoC.Game.OnlinePlayers[i].Packets.Effects.Login(_player);
             }
         }
 
@@ -143,8 +143,8 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
 
             builder.Send(_player);
 
-            var newZIndex = Game.Instance.GetCreatureZIndex(_player, _player.Position);
-            Game.Instance.CreatureMoved(_player, oldPos, newPos, newZIndex);
+            var newZIndex = IoC.Game.GetCreatureZIndex(_player, _player.Position);
+            IoC.Game.CreatureMoved(_player, oldPos, newPos, newZIndex);
         }
 
         public void MoveNorth()
@@ -163,7 +163,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
                 newPos.Z, GameClient.Width, 1, true);
 
             builder.Send(_player);
-            Game.Instance.CreatureMoved(_player, oldPos, newPos, oldZIndex);
+            IoC.Game.CreatureMoved(_player, oldPos, newPos, oldZIndex);
         }
 
         public void MoveWest()
@@ -184,7 +184,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
                 newPos.Z, 1, GameClient.Height, true);
 
             builder.Send(_player);
-            Game.Instance.CreatureMoved(_player, oldPos, newPos, oldZIndex);
+            IoC.Game.CreatureMoved(_player, oldPos, newPos, oldZIndex);
         }
 
         public void MoveEast()
@@ -205,7 +205,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
                 newPos.Z, 1, GameClient.Height, true);
 
             builder.Send(_player);
-            Game.Instance.CreatureMoved(_player, oldPos, newPos, oldZIndex);
+            IoC.Game.CreatureMoved(_player, oldPos, newPos, oldZIndex);
         }
 
         public void ResetAutoWalk()

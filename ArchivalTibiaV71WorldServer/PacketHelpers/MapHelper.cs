@@ -126,7 +126,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
                 {
                     // var currentTile = new Position((ushort) (x + nx + offset), (ushort) (y + ny + offset),
                     //     (byte) nz);
-                    var tile = Game.Instance.GetTile(
+                    var tile = IoC.Game.GetTile(
                         (ushort) (x + nx + offset),
                         (ushort) (y + ny + offset),
                         z);
@@ -174,7 +174,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
                 }
             }
 
-            var creatures = Game.Instance.GetCreaturesOnTile(tile.Position);
+            var creatures = IoC.Game.GetCreaturesOnTile(tile.Position);
             if (creatures == null) return;
             for (int i = 0; i < creatures.Count && count < 10; i++)
             {

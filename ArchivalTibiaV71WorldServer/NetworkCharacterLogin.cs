@@ -23,7 +23,7 @@ namespace ArchivalTibiaV71WorldServer
                 {
                     Console.WriteLine("[Waiting for character logins]");
                     var connection = socket.Accept();
-                    if (Game.Instance.OnlinePlayers.Count >= Game.MaxPlayers)
+                    if (IoC.Game.OnlinePlayers.Count >= Game.MaxPlayers)
                     {
                         connection.SendSorryMessageBox("Too many players online.");
                         connection.Close(1000);
@@ -74,14 +74,14 @@ namespace ArchivalTibiaV71WorldServer
                 $">Character information:\nName: {characterName}\nPassword: {password}\nClient: {client}\nOs: {os}\nGM arg: {gmArg}");
             #endif
             
-            var character = Game.Instance.LoadedPlayers.SingleOrDefault(p => p.Name == characterName && p.Password == password);
+            var character = IoC.Game.LoadedPlayers.SingleOrDefault(p => p.Name == characterName && p.Password == password);
             if (character == null)
             {
                 Console.WriteLine($" -- Failed to login to character {characterName}");
                 return false;
             }
 
-            if (Game.Instance.OnlinePlayersCount >= Game.MaxPlayers)
+            if (IoC.Game.OnlinePlayersCount >= Game.MaxPlayers)
             {
                 connection.SendSorryMessageBox("Too many players online.");
                 connection.Close(1000);
@@ -90,7 +90,7 @@ namespace ArchivalTibiaV71WorldServer
 
             Console.WriteLine($" > Character {characterName} logged in");
             character.SetPreConnection(connection);
-            Game.Instance.NewOnlinePlayers.Add(character);
+            IoC.Game.NewOnlinePlayers.Add(character);
             NetworkOnline.LoginWait.Set();
             return true;
         }

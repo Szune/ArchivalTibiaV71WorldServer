@@ -25,7 +25,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
                     if (item.Id == 0)
                         return;
 
-                    var strucc = Items.Instance.GetById(item.Id);
+                    var strucc = IoC.Items.GetById(item.Id);
                     if ((strucc.Flags & ItemFlags.Container) == ItemFlags.Container)
                     {
                         player.Packets.Containers.Open(0, item, strucc, false);
@@ -47,7 +47,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
 
                     var itemInSlot = item.GetInside(pos.Z);
 
-                    var strucc = Items.Instance.GetById(itemInSlot.Id);
+                    var strucc = IoC.Items.GetById(itemInSlot.Id);
                     if ((strucc.Flags & ItemFlags.Container) == ItemFlags.Container)
                     {
                         player.Packets.Containers.Open(newContainerIndex, itemInSlot, strucc);

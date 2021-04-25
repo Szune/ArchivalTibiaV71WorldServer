@@ -15,7 +15,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             sourcePos = fromPlayer ? player.Position : sourcePos;
             
             var itemId = reader.ReadU16();
-            var item = Items.Instance.GetById(itemId);
+            var item = IoC.Items.GetById(itemId);
             if (!item.Flags.HasFlag(ItemFlags.CanUse))
                 return;
             
@@ -26,19 +26,19 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             var destinationItemOnTopOrPlayer = reader.ReadU16(); // itemID on top or 99 if player
             var containerSlotAgain = reader.ReadU8(); // depends on source type (ground, backpack etc)
 
-            var projectileId = Items.Instance.GetProjectileId(itemId);
-            var magicId = Items.Instance.GetMagicId(itemId);
+            var projectileId = IoC.Items.GetProjectileId(itemId);
+            var magicId = IoC.Items.GetMagicId(itemId);
             
-            var c = Game.Instance.OnlinePlayers.Count;
+            var c = IoC.Game.OnlinePlayers.Count;
             for(int i = 0; i < c; i++)
             {
-                if (!Game.Instance.OnlinePlayers[i].Connection.Connected)
+                if (!IoC.Game.OnlinePlayers[i].Connection.Connected)
                     continue;
-                if (Position.SameScreen(player.Position, Game.Instance.OnlinePlayers[i].Position))
+                if (Position.SameScreen(player.Position, IoC.Game.OnlinePlayers[i].Position))
                 {
-                    Game.Instance.OnlinePlayers[i].Packets.Effects.Projectile(sourcePos, destPos, projectileId);
-                    Game.Instance.OnlinePlayers[i].Packets.Effects.Magic(destPos, magicId);
-                    Console.WriteLine($"Sent projectile to {Game.Instance.OnlinePlayers[i].Name}");
+                    IoC.Game.OnlinePlayers[i].Packets.Effects.Projectile(sourcePos, destPos, projectileId);
+                    IoC.Game.OnlinePlayers[i].Packets.Effects.Magic(destPos, magicId);
+                    Console.WriteLine($"Sent projectile to {IoC.Game.OnlinePlayers[i].Name}");
                 }
             }
 

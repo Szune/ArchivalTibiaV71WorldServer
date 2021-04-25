@@ -669,7 +669,7 @@ namespace ArchivalTibiaV71WorldServer.Io
                 return Result<Item>.Error();
             var next = lex.NextToken();
             if (next.Type == Tokens.RightParenthesis) // 1 arg
-                return Result<Item>.Ok(Items.Instance.Create((ushort) value.Number));
+                return Result<Item>.Ok(IoC.Items.Create((ushort) value.Number));
 
             // 2 args
             if (next.Type != Tokens.Comma)
@@ -679,7 +679,7 @@ namespace ArchivalTibiaV71WorldServer.Io
                 return Result<Item>.Error();
             if (lex.NextToken().Type != Tokens.RightParenthesis)
                 return Result<Item>.Error();
-            return Result<Item>.Ok(Items.Instance.Create((ushort) value.Number, (byte) extra.Number));
+            return Result<Item>.Ok(IoC.Items.Create((ushort) value.Number, (byte) extra.Number));
         }
 
         private static bool ParseEquipmentPiece(ref PlayerLexer lexer, EquipmentBuilder builder, Token token)

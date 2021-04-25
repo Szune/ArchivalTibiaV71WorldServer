@@ -8,7 +8,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
         public void Handle(Player player, PacketReader reader)
         {
             player.TurnUp();
-            Game.Instance.CreatureTurned(player);
+            IoC.Game.CreatureTurned(player);
         }
     }
 }

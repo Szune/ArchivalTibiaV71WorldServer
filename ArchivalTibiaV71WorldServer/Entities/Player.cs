@@ -99,7 +99,7 @@ namespace ArchivalTibiaV71WorldServer.Entities
             var c = _knownCreatures.Count;
             for(int i = 0; i < c; i++)
             {
-                var cr = Game.Instance.GetCreatureById(_knownCreatures[i]);
+                var cr = IoC.Game.GetCreatureById(_knownCreatures[i]);
                 if (cr.Id == 0)
                     return _knownCreatures[i];
                 if (!Position.SameScreen(cr.Position, Position))
@@ -184,12 +184,12 @@ namespace ArchivalTibiaV71WorldServer.Entities
                 var pos = creature.Position;
                 if(creature.Flags.HasFlag(CreatureFlags.Temporary))
                 {
-                    Game.Instance.TemporaryCreatures.Remove(creature);
+                    IoC.Game.TemporaryCreatures.Remove(creature);
                 }
-                var item = Items.Instance.CreateWithFlags(2170, ItemTypeFlags.Decaying);
+                var item = IoC.Items.CreateWithFlags(2170, ItemTypeFlags.Decaying);
                 Packets.Map.ItemAppear(pos, item);
-                Game.Instance.Map[pos].AddItem(item);
-                Game.Instance.DecayingItems.Add(Game.Instance.Map[pos]);
+                IoC.Game.Map[pos].AddItem(item);
+                IoC.Game.DecayingItems.Add(IoC.Game.Map[pos]);
             }
         }
 
@@ -219,7 +219,7 @@ namespace ArchivalTibiaV71WorldServer.Entities
                 _openContainers?.Clear();
                 ClearKnownCreatures();
                 Connection.Close();
-                Game.Instance.CreatureDisappear(this, true);
+                IoC.Game.CreatureDisappear(this, true);
             }
             catch (Exception ex)
             {

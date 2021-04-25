@@ -56,16 +56,16 @@ namespace ArchivalTibiaV71WorldServer
 
                 // assign correct online players value (at least for this millisecond or so)
                 HandleNewOnlinePlayers();
-                if (Game.Instance.OnlinePlayersCount < 1)
+                if (IoC.Game.OnlinePlayersCount < 1)
                 {
                     LoginWait.Reset();
                     LoginWait.WaitOne();
                 }
 
-                var c = Game.Instance.OnlinePlayers.Count;
+                var c = IoC.Game.OnlinePlayers.Count;
                 for (int i = 0; i < c; i++)
                 {
-                    var p = Game.Instance.OnlinePlayers[i];
+                    var p = IoC.Game.OnlinePlayers[i];
                     if (!p.Connection.Connected)
                         continue;
                     ReceiveFromPlayer(p);
@@ -84,10 +84,10 @@ namespace ArchivalTibiaV71WorldServer
 
         private static void ProcessDecaying()
         {
-            for (int i = Game.Instance.DecayingItems.Count - 1; i > -1; i--)
+            for (int i = IoC.Game.DecayingItems.Count - 1; i > -1; i--)
             {
                 // TODO: implement
-                Game.Instance.DecayingItems[i].Decay(i);
+                IoC.Game.DecayingItems[i].Decay(i);
             }
         }
 
@@ -100,8 +100,8 @@ namespace ArchivalTibiaV71WorldServer
                 case TargetType.Attacking:
                     if (!p.CanAttack)
                         return;
-                    var c = Game.Instance.GetCreatureById(p.TargetId);
-                    if(!Game.Instance.AreAdjacent(p, c))
+                    var c = IoC.Game.GetCreatureById(p.TargetId);
+                    if(!IoC.Game.AreAdjacent(p, c))
                         return;
                     p.Attack(c);
                     break;
@@ -153,10 +153,10 @@ namespace ArchivalTibiaV71WorldServer
 
         private static void HandleNewOnlinePlayers()
         {
-            var online = Game.Instance.OnlinePlayers.Count(p => p.Connection.Connected);
-            Game.Instance.OnlinePlayersCount = online;
+            var online = IoC.Game.OnlinePlayers.Count(p => p.Connection.Connected);
+            IoC.Game.OnlinePlayersCount = online;
 
-            var newOnline = Game.Instance.NewOnlinePlayers.Count;
+            var newOnline = IoC.Game.NewOnlinePlayers.Count;
 
             // add new online players
             if (newOnline > 0)
@@ -164,21 +164,21 @@ namespace ArchivalTibiaV71WorldServer
                 // let all players that have been cached use the same player objects as before
                 for (int nOn = newOnline - 1; nOn > -1; nOn--)
                 {
-                    for (int cached = 0; cached < Game.Instance.OnlinePlayers.Count; cached++)
+                    for (int cached = 0; cached < IoC.Game.OnlinePlayers.Count; cached++)
                     {
-                        if (Game.Instance.OnlinePlayers[cached].Id == Game.Instance.NewOnlinePlayers[nOn].Id)
+                        if (IoC.Game.OnlinePlayers[cached].Id == IoC.Game.NewOnlinePlayers[nOn].Id)
                         {
-                            if (Game.Instance.OnlinePlayers[cached].Connection.Connected)
+                            if (IoC.Game.OnlinePlayers[cached].Connection.Connected)
                             {
                                 // Game.OnlinePlayers[cached].Packets.MessageBoxes
                                 //     .Sorry("Someone else logged in on this character.");
                                 try
                                 {
-                                    Game.Instance.OnlinePlayers[cached].Connection.Close(1000);
-                                    Game.Instance.OnlinePlayers[cached]
-                                        .SetConnection(Game.Instance.NewOnlinePlayers[nOn].PreConnection);
-                                    Game.Instance.OnlinePlayers[cached].Packets.LoginSuccess();
-                                    Game.Instance.NewOnlinePlayers.RemoveAt(nOn);
+                                    IoC.Game.OnlinePlayers[cached].Connection.Close(1000);
+                                    IoC.Game.OnlinePlayers[cached]
+                                        .SetConnection(IoC.Game.NewOnlinePlayers[nOn].PreConnection);
+                                    IoC.Game.OnlinePlayers[cached].Packets.LoginSuccess();
+                                    IoC.Game.NewOnlinePlayers.RemoveAt(nOn);
                                 }
                                 catch (Exception ex)
                                 {
@@ -189,10 +189,10 @@ namespace ArchivalTibiaV71WorldServer
                             {
                                 try
                                 {
-                                    Game.Instance.OnlinePlayers[cached]
-                                        .SetConnection(Game.Instance.NewOnlinePlayers[nOn].PreConnection);
-                                    Game.Instance.OnlinePlayers[cached].Packets.LoginSuccess();
-                                    Game.Instance.NewOnlinePlayers.RemoveAt(nOn);
+                                    IoC.Game.OnlinePlayers[cached]
+                                        .SetConnection(IoC.Game.NewOnlinePlayers[nOn].PreConnection);
+                                    IoC.Game.OnlinePlayers[cached].Packets.LoginSuccess();
+                                    IoC.Game.NewOnlinePlayers.RemoveAt(nOn);
                                 }
                                 catch (Exception ex)
                                 {
@@ -205,27 +205,27 @@ namespace ArchivalTibiaV71WorldServer
                     }
                 }
 
-                newOnline = Game.Instance.NewOnlinePlayers.Count;
+                newOnline = IoC.Game.NewOnlinePlayers.Count;
                 if (newOnline < 1)
                 {
-                    online = Game.Instance.OnlinePlayers.Count(p => p.Connection.Connected);
-                    Game.Instance.OnlinePlayersCount = online;
+                    online = IoC.Game.OnlinePlayers.Count(p => p.Connection.Connected);
+                    IoC.Game.OnlinePlayersCount = online;
                     return;
                 }
 
-                if (Game.Instance.OnlinePlayers.Count + newOnline > Game.MaxPlayers)
+                if (IoC.Game.OnlinePlayers.Count + newOnline > Game.MaxPlayers)
                 {
                     var lastAdded = 0;
-                    for (int i = 0; i < Game.Instance.OnlinePlayers.Count; i++)
+                    for (int i = 0; i < IoC.Game.OnlinePlayers.Count; i++)
                     {
                         if (lastAdded == newOnline) // yay, everyone could login
                             break;
-                        if (Game.Instance.OnlinePlayers[i].Connection.Connected) continue;
+                        if (IoC.Game.OnlinePlayers[i].Connection.Connected) continue;
                         try
                         {
-                            Game.Instance.OnlinePlayers[i] = Game.Instance.NewOnlinePlayers[lastAdded];
-                            Game.Instance.OnlinePlayers[i].SetConnection(Game.Instance.OnlinePlayers[i].PreConnection);
-                            Game.Instance.OnlinePlayers[i].Packets.LoginSuccess();
+                            IoC.Game.OnlinePlayers[i] = IoC.Game.NewOnlinePlayers[lastAdded];
+                            IoC.Game.OnlinePlayers[i].SetConnection(IoC.Game.OnlinePlayers[i].PreConnection);
+                            IoC.Game.OnlinePlayers[i].Packets.LoginSuccess();
                             lastAdded++;
                         }
                         catch (Exception ex)
@@ -238,9 +238,9 @@ namespace ArchivalTibiaV71WorldServer
                     {
                         try
                         {
-                            Game.Instance.NewOnlinePlayers[i].Connection.SendSorryMessageBox(
+                            IoC.Game.NewOnlinePlayers[i].Connection.SendSorryMessageBox(
                                 "Too many players online.");
-                            Game.Instance.NewOnlinePlayers[i].Connection.Close(1000);
+                            IoC.Game.NewOnlinePlayers[i].Connection.Close(1000);
                         }
                         catch (Exception ex)
                         {
@@ -250,8 +250,8 @@ namespace ArchivalTibiaV71WorldServer
                 }
                 else
                 {
-                    Game.Instance.OnlinePlayers.AddRange(Game.Instance.NewOnlinePlayers);
-                    foreach (var p in Game.Instance.NewOnlinePlayers)
+                    IoC.Game.OnlinePlayers.AddRange(IoC.Game.NewOnlinePlayers);
+                    foreach (var p in IoC.Game.NewOnlinePlayers)
                     {
                         try
                         {
@@ -265,9 +265,9 @@ namespace ArchivalTibiaV71WorldServer
                     }
                 }
 
-                Game.Instance.NewOnlinePlayers.Clear();
-                online = Game.Instance.OnlinePlayers.Count(p => p.Connection.Connected);
-                Game.Instance.OnlinePlayersCount = online;
+                IoC.Game.NewOnlinePlayers.Clear();
+                online = IoC.Game.OnlinePlayers.Count(p => p.Connection.Connected);
+                IoC.Game.OnlinePlayersCount = online;
             }
 
             // clear out duplicates :/

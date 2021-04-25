@@ -13,10 +13,13 @@ namespace ArchivalTibiaV71WorldServer
 {
     public class Game
     {
-        public static readonly Game Instance = new Game();
-
         private Game()
         {
+        }
+
+        public static Game CreateInstance()
+        {
+            return new();
         }
 
         public List<Player> LoadedPlayers = new List<Player>();
@@ -88,7 +91,7 @@ namespace ArchivalTibiaV71WorldServer
             {
                 if (!OnlinePlayers[i].Connection.Connected) continue;
                 if (!Position.SameScreen(OnlinePlayers[i].Position, pos)) continue;
-                OnlinePlayers[i].Packets.Map.ItemAppear(pos, Items.Instance.Create(id));
+                OnlinePlayers[i].Packets.Map.ItemAppear(pos, IoC.Items.Create(id));
             }
         }
 
@@ -199,7 +202,7 @@ namespace ArchivalTibiaV71WorldServer
             {
                 if (!OnlinePlayers[i].Connection.Connected) continue;
                 if (!Position.SameScreen(OnlinePlayers[i].Position, pos)) continue;
-                OnlinePlayers[i].Packets.Map.ItemAppear(pos, Items.Instance.Create(id, count));
+                OnlinePlayers[i].Packets.Map.ItemAppear(pos, IoC.Items.Create(id, count));
             }
         }
 
@@ -239,7 +242,7 @@ namespace ArchivalTibiaV71WorldServer
                 if (tile.Ground != null)
                 {
                     count += 1;
-                    count += tile.Items?.Count(it => Items.Instance.GetById(it.Id).AddsZIndex) ?? 0;
+                    count += tile.Items?.Count(it => IoC.Items.GetById(it.Id).AddsZIndex) ?? 0;
                 }
                 var creatures = GetCreaturesOnTile(pos, creature);
                 if (creatures != null) count += creatures.Count;
@@ -272,7 +275,7 @@ namespace ArchivalTibiaV71WorldServer
                     var player = reader.Read(files[i].FullName);
                     if (player == null)
                         return false;
-                    Instance.LoadedPlayers.Add(player);
+                    IoC.Game.LoadedPlayers.Add(player);
                     
                     Console.WriteLine($" > Loaded players/{files[i].Name}");
                 }

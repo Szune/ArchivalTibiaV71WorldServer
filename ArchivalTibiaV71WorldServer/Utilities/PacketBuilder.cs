@@ -84,7 +84,7 @@ namespace ArchivalTibiaV71WorldServer.Utilities
         public void AddItem(Item item)
         {
             AddU16(item.Id);
-            var strucc = Items.Instance.GetById(item.Id);
+            var strucc = IoC.Items.GetById(item.Id);
             if ((strucc.Flags & ItemFlags.Stackable) == ItemFlags.Stackable ||
                 (strucc.Flags & ItemFlags.HoldsFluid) == ItemFlags.HoldsFluid ||
                 strucc.IsSplash)

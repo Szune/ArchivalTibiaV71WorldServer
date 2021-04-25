@@ -15,7 +15,7 @@ namespace ArchivalTibiaV71WorldServer.Scripting
             PacketLength = packetLength;
             Reader = reader;
             Player = player;
-            Game = Game.Instance;
+            Game = IoC.Game;
         }
         
         public Game Game;

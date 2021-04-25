@@ -33,8 +33,8 @@ namespace ArchivalTibiaV71WorldServer.Map
                     items.Add(_reader.ReadUInt16());
                 }
             }
-            var speed = Items.Instance.GetById(itemId).Speed;
-            var item = Items.Instance.Create(itemId);
+            var speed = IoC.Items.GetById(itemId).Speed;
+            var item = IoC.Items.Create(itemId);
             return new Tile(item, speed, items, new Position(x, y, z));
         }
     }

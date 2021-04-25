@@ -146,9 +146,9 @@ namespace ArchivalTibiaV71WorldServer.Entities
             // {
             //     tileSpeed *= 3;
             // }
-            // var currentTileSpeed = Game.Instance.Map[Position].Speed;
+            // var currentTileSpeed = IoC.Game.Map[Position].Speed;
             // Position += moveOffset;
-            // var destinationTileSpeed = Game.Instance.Map[Position].Speed;
+            // var destinationTileSpeed = IoC.Game.Map[Position].Speed;
             // //var speed = GetSpeed();
             // var x = currentTileSpeed < 1 ? 1000 : (destinationTileSpeed * 1000) / currentTileSpeed;
             // //var x = speed < 1 ? 1000 : (tileSpeed * 1000) / speed;
@@ -163,9 +163,9 @@ namespace ArchivalTibiaV71WorldServer.Entities
             //     ((GameClient.Beat - 1 + (tileSpeed * 1000) / speed) / GameClient.Beat) * GameClient.Beat +
             //     DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-            var tileSpeed = Game.Instance.Map[Position].Speed;
+            var tileSpeed = IoC.Game.Map[Position].Speed;
             Position += moveOffset;
-            ZIndex = Game.Instance.GetCreatureZIndex(this, Position);
+            ZIndex = IoC.Game.GetCreatureZIndex(this, Position);
 
             var speed = GetSpeed();
             EarliestWalkTime =

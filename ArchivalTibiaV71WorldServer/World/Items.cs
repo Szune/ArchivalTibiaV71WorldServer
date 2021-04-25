@@ -10,11 +10,15 @@ namespace ArchivalTibiaV71WorldServer.World
 {
     public class Items
     {
-        public static readonly Items Instance = new Items();
         private Dictionary<ushort, ItemStructure> _items = new Dictionary<ushort, ItemStructure>();
 
         private Items()
         {
+        }
+
+        public static Items CreateInstance()
+        {
+            return new();
         }
 
         public bool Load()

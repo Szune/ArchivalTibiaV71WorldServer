@@ -26,7 +26,7 @@ namespace ArchivalTibiaV71WorldServer
             Position = position;
             Items = new List<Item>(items.Count);
             for(var i = 0; i < items.Count; i++)
-                Items.Add(World.Items.Instance.Create(items[i]));
+                Items.Add(IoC.Items.Create(items[i]));
         }
 
 

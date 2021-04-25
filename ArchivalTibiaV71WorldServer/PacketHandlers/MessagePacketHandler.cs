@@ -43,14 +43,14 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
                     return;
             }
             player.Packets.Message.LocalMessage(player.Position, player.Name, message, (byte)messageType);
-            var c = Game.Instance.OnlinePlayers.Count;
+            var c = IoC.Game.OnlinePlayers.Count;
             for(int i = 0; i < c; i++)
             {
-                if (!Game.Instance.OnlinePlayers[i].Connection.Connected || ReferenceEquals(player, Game.Instance.OnlinePlayers[i]))
+                if (!IoC.Game.OnlinePlayers[i].Connection.Connected || ReferenceEquals(player, IoC.Game.OnlinePlayers[i]))
                     continue;
-                if (Position.SameFloorAndScreen(player.Position, Game.Instance.OnlinePlayers[i].Position))
+                if (Position.SameFloorAndScreen(player.Position, IoC.Game.OnlinePlayers[i].Position))
                 {
-                    Game.Instance.OnlinePlayers[i].Packets.Message.LocalMessage(player.Position, player.Name, message, (byte)messageType);
+                    IoC.Game.OnlinePlayers[i].Packets.Message.LocalMessage(player.Position, player.Name, message, (byte)messageType);
                 }
             }
         }

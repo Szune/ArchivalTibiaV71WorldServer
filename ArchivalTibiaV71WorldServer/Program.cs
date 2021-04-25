@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using ArchivalTibiaV71WorldServer.Constants;
 using ArchivalTibiaV71WorldServer.Entities;
 using ArchivalTibiaV71WorldServer.Scripting;
 using ArchivalTibiaV71WorldServer.Utilities;
-using ArchivalTibiaV71WorldServer.World;
 
 namespace ArchivalTibiaV71WorldServer
 {
@@ -16,24 +14,26 @@ namespace ArchivalTibiaV71WorldServer
 
         static void Main(string[] args)
         {
+            IoC.InitializeForLive();
+            
             new Thread(() => { _ = CSharpScript.Create("return null;").RunAsync().Result; }).Start();
             Console.Title = "ArchivalTibiaV71WorldServer";
             Console.WriteLine(".-----------------------------------.");
             Console.WriteLine("| Archival Tibia 7.1 World Server: Online |");
             Console.WriteLine("'-----------------------------------'");
-            if (!Items.Instance.Load())
+            if (!IoC.Items.Load())
             {
                 Console.ReadLine();
                 return;
             }
             
-            if (!Game.Instance.LoadCharacters())
+            if (!IoC.Game.LoadCharacters())
             {
                 Console.ReadLine();
                 return;
             }
 
-            if (!Game.Instance.ReadMap())
+            if (!IoC.Game.ReadMap())
             {
                 Console.ReadLine();
                 return;

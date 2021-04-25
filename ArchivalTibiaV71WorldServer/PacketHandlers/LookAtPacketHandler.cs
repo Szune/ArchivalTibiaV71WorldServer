@@ -14,13 +14,13 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             var itemId = reader.ReadU16();
             var topItem = reader.ReadU8();
 
-            var tile = Game.Instance.GetCreaturesOnTile(pos);
+            var tile = IoC.Game.GetCreaturesOnTile(pos);
 
             if (pos.X == 0xFFFF)
             {
                 //Console.WriteLine($"Looked at item {itemId} (top item: {topItem}) in slot {(EquipmentSlots)pos.Y}");
 
-                var strucc = Items.Instance.GetById(itemId);
+                var strucc = IoC.Items.GetById(itemId);
                 if (strucc.Id == 0)
                     return;
 
@@ -45,7 +45,7 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             }
             else
             {
-                var strucc = Items.Instance.GetById(itemId);
+                var strucc = IoC.Items.GetById(itemId);
                 if (strucc.Id == 0)
                     return;
 
