@@ -51,6 +51,8 @@ namespace ArchivalTibiaV71WorldServer.Entities
         }
 
         public uint Id { get; }
+        public bool IsNone => Id == 0;
+        public bool IsDead => Hitpoints < 1;
         public Position Position { get; private set; }
         public Position SpawnPosition { get; private set; }
         public Directions Direction = Directions.South;
@@ -115,6 +117,12 @@ namespace ArchivalTibiaV71WorldServer.Entities
         public ushort GetSpeed()
         {
             return Speed.Get();
+        }
+        
+        public virtual void StopTargeting()
+        {
+            TargetId = 0;
+            TargetType = TargetType.NoTarget;
         }
 
         public void SetAttackTarget(uint targetId)
@@ -241,11 +249,60 @@ namespace ArchivalTibiaV71WorldServer.Entities
             return Id == c.Id;
         }
 
-        public void Damage(ushort damage)
+        public bool Equals(Creature creature)
         {
-            // take armor and defense into account
+            if (creature != null && creature.Id == Id)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public ushort Damage(ushort damage)
+        {
             var aftermath = Hitpoints - damage;
-            Hitpoints = (ushort)(aftermath >= 0 ? aftermath : 0);
+            if (aftermath >= 0)
+            {
+                Hitpoints = (ushort)aftermath;
+                return damage;
+            }
+            else
+            {
+                var hit = Hitpoints;
+                Hitpoints = 0;
+                return hit;
+            }
+        }
+        
+        public virtual ushort GetMagicStrength()
+        {
+            // TODO: add Attack
+            return MagicLevel.Value;
+        }
+        
+        // TODO: take damage type as parameter
+        public virtual ushort GetMagicDefense()
+        {
+            // TODO: add Defense
+            return Level;
+        }
+
+        public virtual ushort GetMeleeStrength()
+        {
+            // TODO: add Attack
+            return Level;
+        }
+        
+        public virtual ushort GetMeleeDefense()
+        {
+            // TODO: add Defense
+            return MagicLevel.Value;
+        }
+
+        public virtual byte GetWeaponDamage()
+        {
+            return Level;
         }
     }
 }

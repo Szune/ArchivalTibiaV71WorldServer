@@ -39,6 +39,8 @@ namespace ArchivalTibiaV71WorldServer.Entities
             Extra = extra;
         }
 
+        public bool IsNone => Id == 0;
+
         public void AddInside(Item item)
         {
             Inside ??= new List<Item>();

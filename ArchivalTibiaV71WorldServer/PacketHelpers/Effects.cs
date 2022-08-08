@@ -19,6 +19,22 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             builder.AddU8(10); // effect id - 1
             builder.Send(_player);
         }
+        
+        public void Exhausted(Creature creature)
+        {
+            var builder = new PacketBuilder(Packets.SendToClient.MagicEffect);
+            builder.AddPosition(creature.Position);
+            builder.AddU8(2); // effect id - 1
+            builder.Send(_player);
+        }
+        
+        public void MeleeSplash(Creature creature)
+        {
+            var builder = new PacketBuilder(Packets.SendToClient.MagicEffect);
+            builder.AddPosition(creature.Position);
+            builder.AddU8(0); // effect id - 1
+            builder.Send(_player);
+        }
 
         public void Logout(Creature creature)
         {

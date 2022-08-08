@@ -125,6 +125,158 @@ namespace ArchivalTibiaV71WorldServer
             }
         }
 
+        public Creature GetFirstPlayerOnTile(Position position)
+        {
+            var c = OnlinePlayers.Count;
+            for (var i = 0; i < c; i++)
+            {
+                var op = OnlinePlayers[i];
+                if (!op.Connection.Connected) continue;
+                if (op.Hitpoints < 1) continue;
+                if (!Position.Equals(op.Position, position)) continue;
+                return op;
+            }
+            return Creature.None;
+        }
+
+        public void PlayerExhausted(Player player)
+        {
+            player.Packets.Message.Status("You are exhausted.");
+            var c = IoC.Game.OnlinePlayers.Count;
+            for(int i = 0; i < c; i++)
+            {
+                var playerOnScreen = IoC.Game.OnlinePlayers[i];
+                if (!playerOnScreen.Connection.Connected)
+                    continue;
+                if (Position.SameScreen(player.Position, IoC.Game.OnlinePlayers[i].Position))
+                {
+                    playerOnScreen.Packets.Effects.Exhausted(playerOnScreen);
+                }
+            }
+        }
+
+        public void RuneTargetAttack(Creature attacker, Creature target, byte projectileId, byte magicId)
+        {
+            if (target.IsDead || attacker.IsDead || !attacker.CanAttack)
+            {
+                return;
+            }
+
+            var damage = Formulae.Magic(attacker.Level, attacker.GetMagicStrength(), target.GetMagicDefense());
+            
+            damage = target.Damage(damage);
+
+            if (target is Player p)
+            {
+                p.Packets.Stats();
+            }
+            
+            attacker.AttackWait();
+            
+            Item corpse = Item.None;
+            
+            if (target.IsDead)
+            {
+                corpse = CreatureKilled(attacker, target);
+            }
+            
+            var c = IoC.Game.OnlinePlayers.Count;
+            for (int i = 0; i < c; i++)
+            {
+                var playerOnScreen = IoC.Game.OnlinePlayers[i];
+                if (!playerOnScreen.Connection.Connected)
+                    continue;
+                if (Position.SameScreen(target.Position, IoC.Game.OnlinePlayers[i].Position))
+                {
+                    playerOnScreen.Packets.Effects.Projectile(attacker.Position, target.Position, projectileId);
+                    playerOnScreen.Packets.Effects.Magic(target.Position, magicId);
+                    playerOnScreen.Packets.Message.Animated(target.Position, Colors.Red, damage.ToString());
+                    playerOnScreen.Packets.Creature.UpdateHealth(target);
+                    if (target.IsDead)
+                    {
+                        playerOnScreen.Packets.Message.Animated(attacker.Position, Colors.White, target.Experience.ToString());
+                        playerOnScreen.Packets.Map.CreatureDisappear(target);
+                        if (!corpse.IsNone)
+                        {
+                            playerOnScreen.Packets.Map.ItemAppear(target.Position, corpse);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void MeleeAttack(Creature attacker, Creature target)
+        {
+            if (target.IsDead || attacker.IsDead || !attacker.CanAttack || !IoC.Game.AreAdjacent(attacker, target))
+            {
+                return;
+            }
+
+            var damage = Formulae.Melee(attacker.Level,
+                attacker.GetMeleeStrength(),
+                attacker.GetWeaponDamage(),
+                target.GetMeleeDefense());
+            
+            damage = target.Damage(damage);
+            
+            if (target is Player p)
+            {
+                p.Packets.Stats();
+            }
+            
+            attacker.AttackWait();
+
+            Item corpse = Item.None;
+
+            if (target.IsDead)
+            {
+                corpse = CreatureKilled(attacker, target);
+            }
+            
+            var c = IoC.Game.OnlinePlayers.Count;
+            for (int i = 0; i < c; i++)
+            {
+                var playerOnScreen = IoC.Game.OnlinePlayers[i];
+                if (!playerOnScreen.Connection.Connected)
+                    continue;
+                if (Position.SameScreen(target.Position, IoC.Game.OnlinePlayers[i].Position))
+                {
+                    playerOnScreen.Packets.Effects.MeleeSplash(target);
+                    playerOnScreen.Packets.Message.Animated(target.Position, Colors.Red, damage.ToString());
+                    playerOnScreen.Packets.Creature.UpdateHealth(target);
+                    if (target.IsDead)
+                    {
+                        playerOnScreen.Packets.Message.Animated(attacker.Position, Colors.White, target.Experience.ToString());
+                        playerOnScreen.Packets.Map.CreatureDisappear(target);
+                        if (!corpse.IsNone)
+                        {
+                            playerOnScreen.Packets.Map.ItemAppear(target.Position, corpse);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static Item CreatureKilled(Creature attacker, Creature target)
+        {
+            if (target.Flags.HasFlag(CreatureFlags.Temporary))
+            {
+                IoC.Game.TemporaryCreatures.Remove(target);
+            }
+
+            attacker.StopTargeting();
+            if (attacker is Player p && target is not Player)
+            {
+                p.AddExperience(target.Experience);
+            }
+
+            // TODO: get corpse + loot stuff 
+            var corpse = IoC.Items.CreateWithFlags(2170, ItemTypeFlags.Decaying);
+            IoC.Game.Map[target.Position].AddItem(corpse);
+            IoC.Game.DecayingItems.Add(IoC.Game.Map[target.Position]);
+            return corpse;
+        }
+
         public List<Creature> GetCreaturesOnTile(Position position, Creature skip = default)
         {
             List<Creature> creatures = null; // lazy initialize because this is going to be run often
@@ -252,9 +404,9 @@ namespace ArchivalTibiaV71WorldServer
             return 0;
         }
 
-        public bool AreAdjacent(Player player, Creature creature)
+        public bool AreAdjacent(Creature player, Creature creature)
         {
-            if (creature.Id == 0 || creature.Hitpoints < 1)
+            if (creature.IsNone || creature.Hitpoints < 1)
                 return false;
             if (player.Position.Z != creature.Position.Z)
                 return false;

@@ -67,6 +67,7 @@
             /// zindex
             /// </summary>
             UseCrosshairThing = 0x83,
+            UseCrosshairThingOnCreature = 0x84,
             CloseContainer = 0x87,
             LookAt = 0x8C,
             Message = 0x96,

@@ -6,6 +6,12 @@ using ArchivalTibiaV71WorldServer.World;
 
 namespace ArchivalTibiaV71WorldServer.PacketHandlers
 {
+    /// <summary>
+    /// Handles using crosshair thing from player on:
+    /// - other players
+    /// - the ground
+    /// - item in container
+    /// </summary>
     public class UseCrosshairThingPacketHandler : IPacketHandler
     {
         public void Handle(Player player, PacketReader reader)
@@ -13,12 +19,12 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             var sourcePos = reader.ReadPosition(); // X == u16.max if from self (player), Y = 64
             var fromPlayer = sourcePos.X == 0xFFFF && sourcePos.Y == 0x40;
             sourcePos = fromPlayer ? player.Position : sourcePos;
-            
+
             var itemId = reader.ReadU16();
             var item = IoC.Items.GetById(itemId);
             if (!item.Flags.HasFlag(ItemFlags.CanUse))
                 return;
-            
+
             //var sourceZIndex = reader.ReadU8(); // not sure if actually zindex
             var containerSlot = reader.ReadU8(); // depends on source type (ground, backpack etc)
 
@@ -26,21 +32,44 @@ namespace ArchivalTibiaV71WorldServer.PacketHandlers
             var destinationItemOnTopOrPlayer = reader.ReadU16(); // itemID on top or 99 if player
             var containerSlotAgain = reader.ReadU8(); // depends on source type (ground, backpack etc)
 
+            // TODO: separate attack and exhausted (only difference is a rune attack triggers AttackWait as well as RuneWait)
+            if (!player.CanAttack)
+            {
+                IoC.Game.PlayerExhausted(player);
+                return;
+            }
+
             var projectileId = IoC.Items.GetProjectileId(itemId);
             var magicId = IoC.Items.GetMagicId(itemId);
-            
-            var c = IoC.Game.OnlinePlayers.Count;
-            for(int i = 0; i < c; i++)
+
+            if (destinationItemOnTopOrPlayer == 99)
             {
-                if (!IoC.Game.OnlinePlayers[i].Connection.Connected)
-                    continue;
-                if (Position.SameScreen(player.Position, IoC.Game.OnlinePlayers[i].Position))
+                // TODO: check if AoE rune
+                var targetPlayer = IoC.Game.GetFirstPlayerOnTile(destPos);
+                if (!targetPlayer.Equals(player))
                 {
-                    IoC.Game.OnlinePlayers[i].Packets.Effects.Projectile(sourcePos, destPos, projectileId);
-                    IoC.Game.OnlinePlayers[i].Packets.Effects.Magic(destPos, magicId);
-                    Console.WriteLine($"Sent projectile to {IoC.Game.OnlinePlayers[i].Name}");
+                    // only deal damage if not attacking self
+                    IoC.Game.RuneTargetAttack(player, targetPlayer, projectileId, magicId);
+                }
+                else
+                {
+                    var c = IoC.Game.OnlinePlayers.Count;
+                    for (int i = 0; i < c; i++)
+                    {
+                        var playerOnScreen = IoC.Game.OnlinePlayers[i];
+                        if (!playerOnScreen.Connection.Connected)
+                            continue;
+                        if (Position.SameScreen(player.Position, IoC.Game.OnlinePlayers[i].Position))
+                        {
+                            playerOnScreen.Packets.Effects.Projectile(sourcePos, destPos, projectileId);
+                            playerOnScreen.Packets.Effects.Magic(destPos, magicId);
+                        }
+                    }
                 }
             }
+
+            // TODO: handle other item uses (rope etc)
+
 
 //             Console.WriteLine(
 // $@"SourcePos: {sourcePos}

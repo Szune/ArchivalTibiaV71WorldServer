@@ -72,60 +72,55 @@ namespace ArchivalTibiaV71WorldServer.Io
 
         private ref struct PlayerLexer
         {
-            private static Dictionary<string, Token> _keywords;
-
-            static PlayerLexer()
+            private static Dictionary<string, Token> _keywords = new()
             {
-                _keywords = new Dictionary<string, Token>
-                {
-                    {"Id", new Token(Tokens.Id)},
-                    {"Name", new Token(Tokens.Name)},
-                    {"Password", new Token(Tokens.Password)},
-                    {"Position", new Token(Tokens.Position)},
-                    {"TemplePosition", new Token(Tokens.TemplePosition)},
-                    {"Outfit", new Token(Tokens.Outfit)},
-                    {"Level", new Token(Tokens.Level)},
-                    {"Experience", new Token(Tokens.Experience)},
-                    {"Health", new Token(Tokens.Health)},
-                    {"MaxHealth", new Token(Tokens.MaxHealth)},
-                    {"Mana", new Token(Tokens.Mana)},
-                    {"MaxMana", new Token(Tokens.MaxMana)},
-                    {"Capacity", new Token(Tokens.Capacity)},
-                    {"MagicLevel", new Token(Tokens.MagicLevel)},
-                    {"MagicLevelExp", new Token(Tokens.MagicLevelExp)},
-                    {"Fist", new Token(Tokens.Fist)},
-                    {"FistExp", new Token(Tokens.FistExp)},
-                    {"Club", new Token(Tokens.Club)},
-                    {"ClubExp", new Token(Tokens.ClubExp)},
-                    {"Sword", new Token(Tokens.Sword)},
-                    {"SwordExp", new Token(Tokens.SwordExp)},
-                    {"Axe", new Token(Tokens.Axe)},
-                    {"AxeExp", new Token(Tokens.AxeExp)},
-                    {"Distance", new Token(Tokens.Distance)},
-                    {"DistanceExp", new Token(Tokens.DistanceExp)},
-                    {"Shielding", new Token(Tokens.Shielding)},
-                    {"ShieldingExp", new Token(Tokens.ShieldingExp)},
-                    {"Fishing", new Token(Tokens.Fishing)},
-                    {"FishingExp", new Token(Tokens.FishingExp)},
-                    {"Equipment", new Token(Tokens.Equipment)},
-                    {"Head", new Token(Tokens.Head)},
-                    {"Necklace", new Token(Tokens.Necklace)},
-                    {"Backpack", new Token(Tokens.Backpack)},
-                    {"Armor", new Token(Tokens.Armor)},
-                    {"Right", new Token(Tokens.Right)},
-                    {"Left", new Token(Tokens.Left)},
-                    {"Legs", new Token(Tokens.Legs)},
-                    {"Feet", new Token(Tokens.Feet)},
-                    {"Ring", new Token(Tokens.Ring)},
-                    {"Ammo", new Token(Tokens.Ammo)},
-                    {"Inventory", new Token(Tokens.Inventory)},
-                    {"Item", new Token(Tokens.Item)},
-                    {"Container", new Token(Tokens.Container)},
-                    {"IsAdmin", new Token(Tokens.IsAdmin)},
-                    {"True", new Token(Tokens.True)},
-                    {"False", new Token(Tokens.False)},
-                };
-            }
+                {"Id", new Token(Tokens.Id)},
+                {"Name", new Token(Tokens.Name)},
+                {"Password", new Token(Tokens.Password)},
+                {"Position", new Token(Tokens.Position)},
+                {"TemplePosition", new Token(Tokens.TemplePosition)},
+                {"Outfit", new Token(Tokens.Outfit)},
+                {"Level", new Token(Tokens.Level)},
+                {"Experience", new Token(Tokens.Experience)},
+                {"Health", new Token(Tokens.Health)},
+                {"MaxHealth", new Token(Tokens.MaxHealth)},
+                {"Mana", new Token(Tokens.Mana)},
+                {"MaxMana", new Token(Tokens.MaxMana)},
+                {"Capacity", new Token(Tokens.Capacity)},
+                {"MagicLevel", new Token(Tokens.MagicLevel)},
+                {"MagicLevelExp", new Token(Tokens.MagicLevelExp)},
+                {"Fist", new Token(Tokens.Fist)},
+                {"FistExp", new Token(Tokens.FistExp)},
+                {"Club", new Token(Tokens.Club)},
+                {"ClubExp", new Token(Tokens.ClubExp)},
+                {"Sword", new Token(Tokens.Sword)},
+                {"SwordExp", new Token(Tokens.SwordExp)},
+                {"Axe", new Token(Tokens.Axe)},
+                {"AxeExp", new Token(Tokens.AxeExp)},
+                {"Distance", new Token(Tokens.Distance)},
+                {"DistanceExp", new Token(Tokens.DistanceExp)},
+                {"Shielding", new Token(Tokens.Shielding)},
+                {"ShieldingExp", new Token(Tokens.ShieldingExp)},
+                {"Fishing", new Token(Tokens.Fishing)},
+                {"FishingExp", new Token(Tokens.FishingExp)},
+                {"Equipment", new Token(Tokens.Equipment)},
+                {"Head", new Token(Tokens.Head)},
+                {"Necklace", new Token(Tokens.Necklace)},
+                {"Backpack", new Token(Tokens.Backpack)},
+                {"Armor", new Token(Tokens.Armor)},
+                {"Right", new Token(Tokens.Right)},
+                {"Left", new Token(Tokens.Left)},
+                {"Legs", new Token(Tokens.Legs)},
+                {"Feet", new Token(Tokens.Feet)},
+                {"Ring", new Token(Tokens.Ring)},
+                {"Ammo", new Token(Tokens.Ammo)},
+                {"Inventory", new Token(Tokens.Inventory)},
+                {"Item", new Token(Tokens.Item)},
+                {"Container", new Token(Tokens.Container)},
+                {"IsAdmin", new Token(Tokens.IsAdmin)},
+                {"True", new Token(Tokens.True)},
+                {"False", new Token(Tokens.False)},
+            };
 
             private readonly ReadOnlySpan<char> _chars;
             private int _pos;
@@ -737,7 +732,13 @@ namespace ArchivalTibiaV71WorldServer.Io
 
             Result<long> longValue;
             if (!(longValue = NextNumberValue(ref lexer)).Success)
-                return Result<Outfit>.Error();
+            {
+                if (lexer.Current.Type == Tokens.RightParenthesis)
+                    return Result<Outfit>.Ok(new Outfit(outfit));
+                else
+                    return Result<Outfit>.Error();
+            }
+            
             var head = longValue.Value;
             if (!(longValue = NextNumberValue(ref lexer)).Success)
                 return Result<Outfit>.Error();

@@ -100,7 +100,7 @@ namespace ArchivalTibiaV71WorldServer.Entities
             for(int i = 0; i < c; i++)
             {
                 var cr = IoC.Game.GetCreatureById(_knownCreatures[i]);
-                if (cr.Id == 0)
+                if (cr.IsNone)
                     return _knownCreatures[i];
                 if (!Position.SameScreen(cr.Position, Position))
                     return _knownCreatures[i];
@@ -161,36 +161,10 @@ namespace ArchivalTibiaV71WorldServer.Entities
             ChaseMode = chaseMode;
         }
 
-        public void StopTargeting()
+        public override void StopTargeting()
         {
-            TargetId = 0;
-            TargetType = TargetType.NoTarget;
+            base.StopTargeting();
             Packets.StopAttack();
-        }
-
-        public void Attack(Creature creature)
-        {
-            AttackWait();
-            // take weapon and skill into account
-            creature.Damage(Level);
-            Packets.Message.Animated(creature.Position, Colors.Red, Level.ToString());
-            Packets.Creature.UpdateHealth(creature);
-            
-            if (creature.Hitpoints < 1)
-            {
-                StopTargeting();
-                AddExperience(creature.Experience);
-                Packets.Map.CreatureDisappear(creature);
-                var pos = creature.Position;
-                if(creature.Flags.HasFlag(CreatureFlags.Temporary))
-                {
-                    IoC.Game.TemporaryCreatures.Remove(creature);
-                }
-                var item = IoC.Items.CreateWithFlags(2170, ItemTypeFlags.Decaying);
-                Packets.Map.ItemAppear(pos, item);
-                IoC.Game.Map[pos].AddItem(item);
-                IoC.Game.DecayingItems.Add(IoC.Game.Map[pos]);
-            }
         }
 
         public void AddExperience(uint exp)
@@ -201,7 +175,6 @@ namespace ArchivalTibiaV71WorldServer.Entities
             {
                 AddLevel((byte)(level - Level));
             }
-            Packets.Message.Animated(Position, Colors.White, exp.ToString());
             Packets.Stats();
         }
 
@@ -217,6 +190,7 @@ namespace ArchivalTibiaV71WorldServer.Entities
             try
             {
                 _openContainers?.Clear();
+                _autoWalkSteps.Clear();
                 ClearKnownCreatures();
                 Connection.Close();
                 IoC.Game.CreatureDisappear(this, true);
@@ -225,6 +199,37 @@ namespace ArchivalTibiaV71WorldServer.Entities
             {
                 Console.WriteLine($" -- Exception during logout of {Name}: {ex}");
             }
+        }
+
+        public override ushort GetMeleeStrength()
+        {
+            // TODO: define weapon types
+            // TODO: then do the following
+            /* 1. find the weapon in left/right hand with most attack
+             * 2. get the weapon skill type
+             * 3. return the skill level of the weapon skill type
+             */
+            return Level;
+        }
+
+        public override ushort GetMeleeDefense()
+        {
+            return Equipment.GetDefense();
+        }
+        
+        public override ushort GetMagicStrength()
+        {
+            return MagicLevel.Value;
+        }
+
+        public override ushort GetMagicDefense()
+        {
+            return 0;
+        }
+
+        public override byte GetWeaponDamage()
+        {
+            return Math.Max(IoC.Items.GetById(Equipment.Left.Id).Attack, IoC.Items.GetById(Equipment.Right.Id).Attack);
         }
     }
 
@@ -314,6 +319,20 @@ namespace ArchivalTibiaV71WorldServer.Entities
                 default:
                     return Item.None;
             }
+        }
+
+        public ushort GetDefense()
+        {
+            // TODO: fix
+            return (ushort)(IoC.Items.GetById(Head.Id).Armor +
+                   IoC.Items.GetById(Necklace.Id).Armor +
+                   IoC.Items.GetById(Armor.Id).Armor +
+                   IoC.Items.GetById(Right.Id).Defense +
+                   IoC.Items.GetById(Left.Id).Defense +
+                   IoC.Items.GetById(Legs.Id).Armor +
+                   IoC.Items.GetById(Feet.Id).Armor +
+                   IoC.Items.GetById(Ring.Id).Armor +
+                   IoC.Items.GetById(Ammunition.Id).Armor);
         }
     }
 }

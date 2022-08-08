@@ -40,6 +40,7 @@ namespace ArchivalTibiaV71WorldServer
             PacketHandlers[Packets.ReceiveFromClient.AttackTarget] = new AttackTargetPacketHandler();
             PacketHandlers[Packets.ReceiveFromClient.CloseContainer] = new CloseContainerPacketHandler();
             PacketHandlers[Packets.ReceiveFromClient.UseCrosshairThing] = new UseCrosshairThingPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.UseCrosshairThingOnCreature] = new UseItemOnCreaturePacketHandler();
         }
 
         public static void OnlinePlayersReceiveLoop()
@@ -102,7 +103,7 @@ namespace ArchivalTibiaV71WorldServer
                     var c = IoC.Game.GetCreatureById(p.TargetId);
                     if (!IoC.Game.AreAdjacent(p, c))
                         return;
-                    p.Attack(c);
+                    IoC.Game.MeleeAttack(p, c);
                     break;
                 case TargetType.Following:
                     break;
