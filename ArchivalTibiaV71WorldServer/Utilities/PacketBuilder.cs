@@ -29,7 +29,7 @@ namespace ArchivalTibiaV71WorldServer.Utilities
 
 
         public void AddPacketId(Packets.SendToClient packet) => AddU8((byte) packet);
-        
+
         public void AddU8(byte value)
         {
             _buffer[_pos] = value;
@@ -147,7 +147,26 @@ namespace ArchivalTibiaV71WorldServer.Utilities
             AddU8(creature.Outfit.LightColor); // possibly light color
             AddU16(creature.GetSpeed()); // speed
         }
-        
+
+        public void AddOutfit(Creature creature)
+        {
+            if (creature.Outfit.Id == 0)
+            {
+                AddU8(creature.Outfit.Id); // invisible
+                AddU8(0);
+                AddU8(0);
+                AddU8(0);
+                AddU8(0);
+            }
+            else
+            {
+                AddU8(creature.Outfit.Id); // wearing an outfit, not invisible
+                AddU8(creature.Outfit.Head); // head
+                AddU8(creature.Outfit.Body); // body
+                AddU8(creature.Outfit.Legs); // legs
+                AddU8(creature.Outfit.Feet); // feet
+            }
+        }
 
         public void Send(Socket connection)
         {
@@ -195,7 +214,7 @@ namespace ArchivalTibiaV71WorldServer.Utilities
 
             Reset();
         }
-        
+
         public void Reset()
         {
             _pos = 2;
