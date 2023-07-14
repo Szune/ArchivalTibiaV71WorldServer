@@ -41,6 +41,8 @@ namespace ArchivalTibiaV71WorldServer
             PacketHandlers[Packets.ReceiveFromClient.CloseContainer] = new CloseContainerPacketHandler();
             PacketHandlers[Packets.ReceiveFromClient.UseCrosshairThing] = new UseCrosshairThingPacketHandler();
             PacketHandlers[Packets.ReceiveFromClient.UseCrosshairThingOnCreature] = new UseItemOnCreaturePacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.OpenSetOutfitDialog] = new OpenSetOutfitDialogPacketHandler();
+            PacketHandlers[Packets.ReceiveFromClient.ChangeOutfit] = new ChangeOutfitPacketHandler();
         }
 
         public static void OnlinePlayersReceiveLoop()
