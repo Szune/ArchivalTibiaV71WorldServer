@@ -36,7 +36,7 @@
             Message = 0xAA,
             SpecialMessage = 0xB4,
             ResetAutoWalk = 0xB5,
-            NoIdea = 0xC8,
+            SetOutfitDialog = 0xC8,
         }
         public enum ReceiveFromClient : byte
         {
@@ -76,6 +76,7 @@
             AttackChaseMode = 0xA0,
             RequestSingleTile = 0xC9,
             OpenSetOutfitDialog = 0xD2,
+            ChangeOutfit = 0xD3,
             AddVip = 0xDC,
         }
     }
