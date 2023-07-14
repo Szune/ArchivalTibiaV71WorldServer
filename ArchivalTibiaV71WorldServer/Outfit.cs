@@ -14,7 +14,7 @@ namespace ArchivalTibiaV71WorldServer
             LightLevel = lightLevel;
             LightColor = lightColor;
         }
-        
+
         public Outfit(Outfits id, byte lightLevel = 0, byte lightColor = 0x7D)
         {
             Id = (byte)id;
@@ -36,6 +36,15 @@ namespace ArchivalTibiaV71WorldServer
         public void Set(Outfits outfit)
         {
             Id = (byte) outfit;
+        }
+
+        public void Set(Outfits outfit, byte head, byte body, byte legs, byte feet)
+        {
+            Id = (byte) outfit;
+            Head = head;
+            Body = body;
+            Legs = legs;
+            Feet = feet;
         }
     }
 }
