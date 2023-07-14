@@ -157,6 +157,8 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             _player.MoveUp();
             var newPos = _player.Position;
             builder.AddPosition(newPos);
+            builder.Send(_player);
+
             builder.AddPacketId(Packets.SendToClient.MoveUp);
             /* add rest of map description */
             _player.Packets.Map.AddMapDescriptionToBuilder(builder, (ushort) (oldPos.X - 8), (ushort) (newPos.Y - 6),
@@ -176,6 +178,8 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             _player.MoveLeft();
             var newPos = _player.Position;
             builder.AddPosition(newPos);
+            builder.Send(_player);
+
             builder.AddPacketId(Packets.SendToClient.MoveLeft);
             /* add rest of map description */
             _player.Packets.Map.AddMapDescriptionToBuilder(builder,
@@ -184,7 +188,9 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
                 newPos.Z, 1, GameClient.Height, true);
 
             builder.Send(_player);
-            IoC.Game.CreatureMoved(_player, oldPos, newPos, oldZIndex);
+
+            var newZIndex = IoC.Game.GetCreatureZIndex(_player, _player.Position);
+            IoC.Game.CreatureMoved(_player, oldPos, newPos, newZIndex);
         }
 
         public void MoveEast()
@@ -197,15 +203,19 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             _player.MoveRight();
             var newPos = _player.Position;
             builder.AddPosition(newPos);
+            builder.Send(_player);
+
             builder.AddPacketId(Packets.SendToClient.MoveRight);
             /* add rest of map description */
-            _player.Packets.Map.AddMapDescriptionToBuilder(builder, 
+            _player.Packets.Map.AddMapDescriptionToBuilder(builder,
                 (ushort) (newPos.X + 9),
                 (ushort) (newPos.Y - 6),
                 newPos.Z, 1, GameClient.Height, true);
 
             builder.Send(_player);
-            IoC.Game.CreatureMoved(_player, oldPos, newPos, oldZIndex);
+
+            var newZIndex = IoC.Game.GetCreatureZIndex(_player, _player.Position);
+            IoC.Game.CreatureMoved(_player, oldPos, newPos, newZIndex);
         }
 
         public void ResetAutoWalk()
