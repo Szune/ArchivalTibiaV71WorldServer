@@ -229,5 +229,17 @@ namespace ArchivalTibiaV71WorldServer.PacketHelpers
             var builder = new PacketBuilder(Packets.SendToClient.StopAttack);
             builder.Send(_player);
         }
+
+        public void SetOutfitDialog()
+        {
+            var builder = new PacketBuilder(Packets.SendToClient.SetOutfitDialog);
+            // TODO: handle all genders
+            builder.AddOutfit(_player);
+            // start outfit
+            builder.AddU8(128);
+            // end outfit
+            builder.AddU8(131);
+            builder.Send(_player);
+        }
     }
 }
